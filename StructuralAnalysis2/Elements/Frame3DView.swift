@@ -10,17 +10,30 @@ import SwiftUI
 
 struct Frame3DView: View {
     
+    @Binding var scene: ModelScene
     var frame3d: Frame3D
+    @Bindable var nodesStore : NodesStore
+    @Bindable var truss2DStore: Truss2DStore
+    @Bindable var frame2DStore: Frame2DStore
+    @Bindable var truss3DStore: Truss3DStore
     @Bindable var frame3DStore: Frame3DStore
-    @Bindable var nodesStore: NodesStore
+    @Bindable var dispStore: DispStore
+    @Bindable var bcStore: BCStore
+    @Bindable var loadStore: LoadStore
     @Bindable var materialStore: MaterialStore
     @Bindable var elPropertyStore: ElPropertyStore
     
-    @Environment(\.presentationMode) private var showDetail
+    @Binding var isEditing: Bool
+    @Binding var node1IsOn:Bool
+    @Binding var node2IsOn:Bool
     
-    @State var node1IsOn:Bool
-    @State var node2IsOn:Bool
+    @Environment(\.presentationMode) private var showDetail
 
+
+    @State private var localMatID: Int?
+    @State private var localPropID: Int?
+    @State private var localNode1: Int?
+    @State private var localNode2: Int?
     
     var body: some View {
         
@@ -29,75 +42,88 @@ struct Frame3DView: View {
             
             VStack(alignment: .leading) {
                 HStack{
-                    Text("MatID:").font(.custom("Arial", size: 20))
-                    TextField("\(frame3d.matID)", text: $frame3DStore.matIDText).textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("MatID:")
+                    TextField("\(frame3d.matID)", value: $localMatID, format: .number)
                 }
                 HStack {
-                    Text("PropertyID:").font(.custom("Arial", size: 20))
-                    TextField("\(frame3d.propertiesID)", text: $frame3DStore.propertyIDText).textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("PropertyID:")
+                    TextField("\(frame3d.propertiesID)", value: $localPropID, format: .number)
                 }
                 HStack {
-                    Text("Node1:").font(.custom("Arial", size: 20))
-                    TextField("\(frame3d.node1)", text: $frame3DStore.node1Text).textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("Node1:")
+                    TextField("\(frame3d.node1)", value: $localNode1, format: .number)
 //                    Spacer()
                     Toggle(isOn: $node1IsOn) {
-                        Text("Pin End").font(.custom("Arial", size: 20))
+                        Text("Pin End")
                         if node1IsOn {
-                            Text("ON").font(.custom("Arial", size: 20))
+                            Text("ON")
                         }
 //                        frame2DStore.frame2DElements[frame2d.id].pin1 = true
                         
                     }
                 }
                 HStack {
-                    Text("Node2:").font(.custom("Arial", size: 20))
-                    TextField("\(frame3d.node2)", text: $frame3DStore.node2Text).textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("Node2:")
+                    TextField("\(frame3d.node2)", value: $localNode2, format: .number)
 //                    Spacer()
                     Toggle(isOn: $node2IsOn) {
-                        Text("Pin End").font(.custom("Arial", size: 20))
+                        Text("Pin End")
                         if node2IsOn {
-                            Text("ON").font(.custom("Arial", size: 20))
+                            Text("ON")
                         }
 //                        frame2DStore.frame2DElements[frame2d.id].pin2 = true
 
                     }
                 }
             }
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .padding()
+            .font(.custom("Arial", size: 20))
             
             HStack {
                 Spacer()
                 Button (action: {
-                     var matIDtemp = Int(self.frame3DStore.matIDText)
-                     if  matIDtemp == nil {
-                         matIDtemp = self.frame3d.matID
-                     }
-                     self.frame3DStore.matIDText = ""
-                    
-                     var proptemp = Int(self.frame3DStore.propertyIDText)
-                     if  proptemp == nil {
-                         proptemp = self.frame3d.propertiesID
-                     }
-                     self.frame3DStore.propertyIDText = ""
-                    
-                     var node1temp = Int(self.frame3DStore.node1Text)
-                     if  node1temp == nil {
-                         node1temp = self.frame3d.node1
-                     }
-                    self.frame3DStore.node1Text = ""
-                     
-                     var node2temp = Int(self.frame3DStore.node2Text)
-                     if  node2temp == nil {
-                         node2temp = self.frame3d.node2
-                     }
-                    self.frame3DStore.node2Text = ""
-                    
-//                        print(" In Frame2DView ")
-//                        print("node1IsOn \(self.node1IsOn) node2IsOn \(self.node2IsOn) ")
-                    
-                    let newFrame3D = Frame3D(id: self.frame3d.id, matID: matIDtemp!, propertiesID: proptemp!, node1: node1temp!, node2: node2temp!, pin1: self.node1IsOn, pin2: self.node2IsOn, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, frame3DStore: self.frame3DStore)
-                     self.frame3DStore.changeFrame3D(element: newFrame3D)
-                     self.frame3DStore.printConnectivity()
-                    
+                    //MARK: - Add new element
+                    if !isEditing{
+                        if localMatID == nil {
+                            localMatID = 0
+                        }
+                        if localPropID == nil {
+                            localPropID = 0
+                        }
+                        if localNode1 == nil {
+                            localNode1 = 0
+                        }
+                        if localNode2 == nil {
+                            localNode2 = 0
+                        }
+                        let newFrame3D = Frame3D(id: self.frame3d.id, matID: localMatID!, propertiesID: localPropID!, node1: localNode1!, node2: localNode2!, pin1: node1IsOn, pin2: node2IsOn, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, frame3DStore: self.frame3DStore)
+                        
+                        //                     self.truss2DStore.changeTruss2D(element: newTruss2D)
+                        self.frame3DStore.addFrame3DEl(element: newFrame3D)
+                        // MARK: -                           ReDraw entire model
+                        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                        isEditing.toggle()
+                    } else {
+                        // MARK: - Make changes to existing node
+                        //                        print("truss Id: \(truss2d.id)")
+                        if localMatID == nil {
+                            localMatID = frame3d.matID
+                        }
+                        if localPropID == nil {
+                            localPropID = frame3d.propertiesID
+                        }
+                        if localNode1 == nil {
+                            localNode1 = frame3d.node1
+                        }
+                        if localNode2 == nil {
+                            localNode2 = frame3d.node2
+                        }
+                        frame3DStore.frame3DElements[frame3d.id].matID = localMatID!
+                        frame3DStore.frame3DElements[frame3d.id].propertiesID = localPropID!
+                        frame3DStore.frame3DElements[frame3d.id].node1 = localNode1!
+                        frame3DStore.frame3DElements[frame3d.id].node2 = localNode2!
+                    }
                     self.showDetail.wrappedValue.dismiss()
 
                      

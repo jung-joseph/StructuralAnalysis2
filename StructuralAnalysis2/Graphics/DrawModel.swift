@@ -489,8 +489,8 @@ class DrawModel{
  
     
     func viewFrame2DElements(modelElements: Frame2DStore, nodesStore: NodesStore,dispStore: DispStore, magFactor: Double, scene:SCNScene) {
-            if modelElements.numFrame2DElements > 0 {
-                        for i in 0...modelElements.numFrame2DElements-1 {
+        if modelElements.frame2DElements.count > 0 {
+            for i in 0...modelElements.frame2DElements.count-1 {
                         
                             let node1 = modelElements.frame2DElements[i].node1
                             let node2 = modelElements.frame2DElements[i].node2
@@ -556,8 +556,8 @@ class DrawModel{
   
     
     func viewTruss3DElements(modelStore: Truss3DStore, nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene) {
-        if modelStore.numTruss3DElements > 0 {
-            for i in 0...modelStore.numTruss3DElements-1 {
+        if modelStore.truss3DElements.count > 0 {
+            for i in 0...modelStore.truss3DElements.count-1 {
                 
                 let node1 = modelStore.truss3DElements[i].node1
                 let node2 = modelStore.truss3DElements[i].node2
@@ -621,8 +621,8 @@ class DrawModel{
 
     
     func viewFrame3DElements(modelStore: Frame3DStore, nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene) {
-        if modelStore.numFrame3DElements > 0 {
-            for i in 0...modelStore.numFrame3DElements-1 {
+        if modelStore.frame3DElements.count > 0 {
+            for i in 0...modelStore.frame3DElements.count-1 {
                 
                 let node1 = modelStore.frame3DElements[i].node1
                 let node2 = modelStore.frame3DElements[i].node2

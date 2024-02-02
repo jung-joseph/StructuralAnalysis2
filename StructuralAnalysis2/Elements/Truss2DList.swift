@@ -1,5 +1,5 @@
 //
-//  OneDList.swift
+//  Truss2DList.swift
 //  FrameStructuralAnalysis
 //
 //  Created by Joseph Jung on 8/2/19.
@@ -37,7 +37,7 @@ struct Truss2DList: View {
 
                     ForEach(truss2DStore.truss2DElements) {truss2D in
                         
-                        NavigationLink(destination: Truss2DView(scene: $scene, truss2d: truss2D, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore, isEditing: $isEditing))
+                        NavigationLink(destination: Truss2DView(scene: $scene, truss2d: truss2D, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore, isEditing: $isEditing))
                         {
                             Truss2DElementRow(truss2DEl: truss2D)
                         }

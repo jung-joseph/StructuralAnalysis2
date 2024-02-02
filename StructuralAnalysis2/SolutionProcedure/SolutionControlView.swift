@@ -78,8 +78,8 @@ struct SolutionControlView: View {
                         }
                     }
                     // Form element Stiffness matrices and assemble for frame2d elements
-                    if self.frame2DStore.numFrame2DElements > 0 {
-                        for i in 0...self.frame2DStore.numFrame2DElements - 1 {
+                    if self.frame2DStore.frame2DElements.count > 0 {
+                        for i in 0...self.frame2DStore.frame2DElements.count - 1 {
                             let matid = self.frame2DStore.frame2DElements[i].matID
                             let youngsMod = self.materialStore.materials[matid].youngsModulus
                             let propid = self.frame2DStore.frame2DElements[i].propertiesID
@@ -107,8 +107,8 @@ struct SolutionControlView: View {
                     }
                     
                         // Form element Stiffness matrices and assemble for truss3d elements
-                    if self.truss3DStore.numTruss3DElements > 0 {
-                        for i in 0...self.truss3DStore.numTruss3DElements - 1 {
+                    if self.truss3DStore.truss3DElements.count > 0 {
+                        for i in 0...self.truss3DStore.truss3DElements.count - 1 {
                             let matid = self.truss3DStore.truss3DElements[i].matID
                             let youngsMod = self.materialStore.materials[matid].youngsModulus
                             let propid = self.truss3DStore.truss3DElements[i].propertiesID
@@ -136,8 +136,8 @@ struct SolutionControlView: View {
                     }
                     
                     // Form element Stiffness matrices and assemble for frame3d elements
-                    if self.frame3DStore.numFrame3DElements > 0 {
-                        for i in 0...self.frame3DStore.numFrame3DElements - 1 {
+                    if self.frame3DStore.frame3DElements.count > 0 {
+                        for i in 0...self.frame3DStore.frame3DElements.count - 1 {
                             let matid = self.frame3DStore.frame3DElements[i].matID
                             let youngsMod = self.materialStore.materials[matid].youngsModulus
                             let G = self.materialStore.materials[matid].shearModulus

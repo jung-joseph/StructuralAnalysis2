@@ -52,8 +52,8 @@ class DispStore: ObservableObject {
             }
         }
         
-        if frame2DStore.numFrame2DElements > 0 {
-            for i in 0...frame2DStore.numFrame2DElements - 1 {
+        if frame2DStore.frame2DElements.count > 0 {
+            for i in 0...frame2DStore.frame2DElements.count - 1 {
                 let node1 = frame2DStore.frame2DElements[i].node1
                 let node2 = frame2DStore.frame2DElements[i].node2
                 
@@ -82,8 +82,8 @@ class DispStore: ObservableObject {
             }
         }
         
-                if truss3DStore.numTruss3DElements > 0 {
-                    for i in 0...truss3DStore.numTruss3DElements - 1 {
+        if truss3DStore.truss3DElements.count > 0 {
+            for i in 0...truss3DStore.truss3DElements.count - 1 {
                         let node1 = truss3DStore.truss3DElements[i].node1
                         let node2 = truss3DStore.truss3DElements[i].node2
                         
@@ -112,8 +112,8 @@ class DispStore: ObservableObject {
                     }
                 }
         
-                if frame3DStore.numFrame3DElements > 0 {
-                    for i in 0...frame3DStore.numFrame3DElements - 1 {
+        if frame3DStore.frame3DElements.count > 0 {
+            for i in 0...frame3DStore.frame3DElements.count - 1 {
                         let node1 = frame3DStore.frame3DElements[i].node1
                         let node2 = frame3DStore.frame3DElements[i].node2
                         

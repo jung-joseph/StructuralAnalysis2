@@ -13,11 +13,11 @@ import SwiftUI
 class Truss3DStore{
     
     var truss3DElements: [Truss3D] = []
-    var numTruss3DElements: Int = 0
-    var matIDText : String = ""
-    var propertyIDText : String = ""
-    var node1Text : String = ""
-    var node2Text : String = ""
+//    var numTruss3DElements: Int = 0
+//    var matIDText : String = ""
+//    var propertyIDText : String = ""
+//    var node1Text : String = ""
+//    var node2Text : String = ""
 
     init() {
         print("Initializing Truss2DStore")
@@ -25,7 +25,7 @@ class Truss3DStore{
     
     func addTruss3DEl(element: Truss3D){
         truss3DElements.append(element)
-        self.numTruss3DElements += 1
+//        self.numTruss3DElements += 1
     }
     
     func changeTruss3D(element: Truss3D){
@@ -37,7 +37,7 @@ class Truss3DStore{
         print("Truss3D Elements")
         print("id    node 1    node2")
         print()
-        for i in 0...numTruss3DElements-1 {
+        for i in 0...truss3DElements.count-1 {
             print("\(truss3DElements[i].id)    \(truss3DElements[i].node1)       \(truss3DElements[i].node2)")
         }
     }

@@ -28,12 +28,13 @@ struct ElementTypeView: View {
                 NavigationLink(destination: Truss2DList(scene:$scene, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore))  {Text("Truss2D Elements (\(truss2DStore.truss2DElements.count))").foregroundColor(.blue)}
                 
                 
-                NavigationLink(destination: Frame2DList(frame2DStore: frame2DStore, nodesStore: nodesStore, materialStore: materialStore, elPropertyStore: elPropertyStore))  {Text("Frame2D Elements (\(frame2DStore.frame2DElements.count))").foregroundColor(.blue)}
+                NavigationLink(destination: Frame2DList(scene:$scene, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore))
+                    {Text("Frame2D Elements (\(frame2DStore.frame2DElements.count))").foregroundColor(.blue)}
                 
-                NavigationLink(destination: Truss3DList(truss3DStore: truss3DStore, nodesStore: nodesStore, materialStore: materialStore, elPropertyStore: elPropertyStore))  {Text("Truss3D Elements (\(truss3DStore.truss3DElements.count))").foregroundColor(.blue)}
+                NavigationLink(destination: Truss3DList(scene:$scene, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore))  {Text("Truss3D Elements (\(truss3DStore.truss3DElements.count))").foregroundColor(.blue)}
                 
                 
-                NavigationLink(destination: Frame3DList(frame3DStore: frame3DStore, nodesStore: nodesStore, materialStore: materialStore, elPropertyStore: elPropertyStore))  {Text("Frame3D Elements (\(frame3DStore.frame3DElements.count))").foregroundColor(.blue)}
+                NavigationLink(destination: Frame3DList(scene:$scene, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore))  {Text("Frame3D Elements (\(frame3DStore.frame3DElements.count))").foregroundColor(.blue)}
                 
                 
             } // List

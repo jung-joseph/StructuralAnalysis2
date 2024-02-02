@@ -13,13 +13,23 @@ import SwiftUI
 struct Truss3DList: View {
 
 //    @Binding var dismissFlag: Bool
-    @Bindable var truss3DStore : Truss3DStore
+    @Binding var scene: ModelScene
     @Bindable var nodesStore : NodesStore
-    @Bindable var materialStore : MaterialStore
-    @Bindable var elPropertyStore : ElPropertyStore
+    @Bindable var truss2DStore: Truss2DStore
+    @Bindable var frame2DStore: Frame2DStore
+    @Bindable var truss3DStore: Truss3DStore
+    @Bindable var frame3DStore: Frame3DStore
+    @Bindable var dispStore: DispStore
+    @Bindable var bcStore: BCStore
+    @Bindable var loadStore: LoadStore
+    @Bindable var materialStore: MaterialStore
+    @Bindable var elPropertyStore: ElPropertyStore
     
     @Environment(\.presentationMode) private var presentationMode
 
+    @State var showTruss3DView: Bool = false
+    @State var isEditing:Bool = true
+    
     
     var body: some View {
         
@@ -29,7 +39,7 @@ struct Truss3DList: View {
                 List {
 
                     ForEach(truss3DStore.truss3DElements) {truss3D in
-                        NavigationLink(destination: Truss3DView(truss3d: truss3D, truss3DStore: self.truss3DStore, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore)){
+                        NavigationLink(destination: Truss3DView(scene: $scene, truss3d: truss3D, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore, isEditing: $isEditing)){
                             Truss3DElementRow(truss3DEl: truss3D)
                         }
                     }.onDelete(perform: delete)
@@ -38,10 +48,9 @@ struct Truss3DList: View {
                 .navigationBarItems(
                 
                 leading: Button("+") {
-                    let newTruss3d = Truss3D(id: self.truss3DStore.numTruss3DElements, matID: 0, propertiesID: 0, node1: 0, node2: 0, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, truss3DStore: Truss3DStore())
-                    self.truss3DStore.node1Text = "0"
-                    self.truss3DStore.node2Text = "0"
-                    self.truss3DStore.addTruss3DEl(element: newTruss3d)
+                    showTruss3DView.toggle()
+                    isEditing = false
+
                 }
                 .padding()
                 .foregroundColor(Color.blue)
@@ -57,8 +66,11 @@ struct Truss3DList: View {
                 
                 
             }
-            
-            
+            .sheet(isPresented: $showTruss3DView) {
+                let newTruss3d = Truss3D(id: self.truss3DStore.truss3DElements.count, matID: 0, propertiesID: 0, node1: 0, node2: 0, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, truss3DStore: truss3DStore)
+                
+                Truss3DView(scene: $scene,  truss3d: newTruss3d, nodesStore: nodesStore, truss2DStore: truss2DStore,frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore, isEditing: $isEditing)
+            }
         } // Nav View
     }// View
     
@@ -72,13 +84,14 @@ struct Truss3DList: View {
             truss3DStore.truss3DElements.remove(at: first)
         }
         
-        truss3DStore.numTruss3DElements -= 1
+//        truss3DStore.numTruss3DElements -= 1
        
         if truss3DStore.truss3DElements.count > 0 {
             for index in 0...truss3DStore.truss3DElements.count - 1{
                 truss3DStore.truss3DElements[index].id = index
             }
         }
+        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
         
     }
 }
