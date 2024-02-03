@@ -13,24 +13,24 @@ import Combine
 class BCStore{
     
        var bcs: [BC] = []
-       var numBCs: Int
-       var bcNodeText: String = ""
-       var bcDirectionText: String = ""
-       var bcValueText: String = ""
+//       var numBCs: Int
+//       var bcNodeText: String = ""
+//       var bcDirectionText: String = ""
+//       var bcValueText: String = ""
     
     init() {
         
         print("Initializing bcStore")
-        numBCs = 0
+//        numBCs = 0
         let bc1 = BC(id: 0, bcNode: 0, bcDirection: 0, bcValue: 0)
-        numBCs = 1
+//        numBCs = 1
         bcs = [bc1]
         
     }
     
     func addBC(bc: BC) {
         bcs.append(bc)
-        self.numBCs += 1
+//        self.numBCs += 1
     }
     
     func changeBC(bc: BC) {
@@ -39,7 +39,7 @@ class BCStore{
     
     func applyBoundaryConditions(system: Gauss, nodesStore: NodesStore) {
 
-        for bcNum in 0...numBCs - 1 {
+        for bcNum in 0...bcs.count - 1 {
             
             let node = self.bcs[bcNum].bcNode
             let startingDof = nodesStore.nodes[node].beginDofIndex
@@ -75,7 +75,7 @@ class BCStore{
         print("Boundary Conditions")
         print("id     Node    Direction     Value")
         print()
-        for i in 0...numBCs-1 {
+        for i in 0...bcs.count-1 {
             print(String(format: " %i     %i    %i     %.2f",bcs[i].id,bcs[i].bcNode, bcs[i].bcDirection, bcs[i].bcValue) )
         }
         print()

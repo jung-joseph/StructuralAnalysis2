@@ -270,8 +270,8 @@ class DrawModel{
     func viewBCs(bcStore: BCStore, nodesStore: NodesStore, dims: [Double], scene:SCNScene){
         
         
-        if bcStore.numBCs > 0 {
-            for i in 0...bcStore.numBCs - 1 {
+        if bcStore.bcs.count > 0 {
+            for i in 0...bcStore.bcs.count - 1 {
                 
                 
                 let direction = bcStore.bcs[i].bcDirection
@@ -344,8 +344,8 @@ class DrawModel{
     func viewLoads(loadStore: LoadStore, nodesStore: NodesStore, dims: [Double], scene:SCNScene){
         
         
-        if loadStore.numLoads > 0 {
-            for i in 0...loadStore.numLoads - 1 {
+        if loadStore.loads.count > 0 {
+            for i in 0...loadStore.loads.count - 1 {
                 
                 
                 let direction = loadStore.loads[i].loadDirection

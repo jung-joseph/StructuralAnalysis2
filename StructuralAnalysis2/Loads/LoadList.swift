@@ -10,20 +10,31 @@ import SwiftUI
 
 struct LoadList: View {
     
-    @Bindable var loadStore : LoadStore
+    @Binding var scene: ModelScene
+    @Bindable var nodesStore : NodesStore
+    @Bindable var truss2DStore: Truss2DStore
+    @Bindable var frame2DStore: Frame2DStore
+    @Bindable var truss3DStore: Truss3DStore
+    @Bindable var frame3DStore: Frame3DStore
+    @Bindable var dispStore: DispStore
+    @Bindable var bcStore: BCStore
+    @Bindable var loadStore: LoadStore
+    
     @Environment(\.presentationMode) private var presentationMode
     
+    @State var showLoadsView: Bool = false
+    @State var isEditing: Bool = true
     
     var body: some View {
         
-        NavigationView {
+        NavigationStack {
         
             VStack {
                 
                 List {
                     
                     ForEach(loadStore.loads) {load in
-                        NavigationLink(destination: LoadView(load: load, loadStore: self.loadStore)) {
+                        NavigationLink(destination: LoadView(scene: $scene, load: load, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore,isEditing: $isEditing)) {
                             LoadRow(load: load)
                         }
                     }.onDelete(perform: delete)
@@ -31,11 +42,14 @@ struct LoadList: View {
                     .navigationBarItems(
                     
                     leading: Button("+") {
-                        let newLoad = Load(id:self.loadStore.numLoads,loadNode: 0, loadDirection: 0, loadValue: 0)
-                        self.loadStore.loadNodeText = "0"
-                        self.loadStore.loadDirectionText = "0"
-                        self.loadStore.loadValueText = "0"
-                        self.loadStore.addLoad(load: newLoad)
+                        showLoadsView.toggle()
+                        isEditing = false
+                        
+//                        let newLoad = Load(id:self.loadStore.numLoads,loadNode: 0, loadDirection: 0, loadValue: 0)
+//                        self.loadStore.loadNodeText = "0"
+//                        self.loadStore.loadDirectionText = "0"
+//                        self.loadStore.loadValueText = "0"
+//                        self.loadStore.addLoad(load: newLoad)
                     }
                     .padding()
                     .foregroundColor(Color.blue)
@@ -51,6 +65,10 @@ struct LoadList: View {
                 
                 
             } //VStack
+            .sheet(isPresented: $showLoadsView){
+                let newLoad = Load(id:loadStore.loads.count,loadNode: 0, loadDirection: 0, loadValue: 0.0)
+                LoadView(scene: $scene, load: newLoad, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, isEditing: $isEditing)
+            }
             
         } // NavigationView
     } // body
@@ -64,7 +82,7 @@ struct LoadList: View {
             loadStore.loads.remove(at: first)
         }
         
-        loadStore.numLoads -= 1
+//        loadStore.numLoads -= 1
        
         
         for index in 0...loadStore.loads.count - 1{
@@ -77,9 +95,9 @@ struct LoadList: View {
     
 }
 
-#Preview(traits: .landscapeLeft) {
-    LoadList(loadStore: LoadStore())
-}
+//#Preview(traits: .landscapeLeft) {
+//    LoadList(loadStore: LoadStore())
+//}
 
 /*
  #if DEBUG

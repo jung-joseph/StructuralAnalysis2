@@ -13,21 +13,21 @@ import Combine
 class LoadStore: ObservableObject {
 
        var loads: [Load] = []
-       var numLoads: Int
-       var loadNodeText: String = ""
-       var loadDirectionText: String = ""    
-       var loadValueText: String = ""
+//       var numLoads: Int
+//       var loadNodeText: String = ""
+//       var loadDirectionText: String = ""    
+//       var loadValueText: String = ""
     
     
     init() {
         
-        numLoads = 0
+//        numLoads = 0
         print("Initializing loadStore")
     }
     
     func addLoad(load: Load) {
         loads.append(load)
-        self.numLoads += 1
+//        self.numLoads += 1
     }
     
     func changeLoad(load: Load) {
@@ -36,8 +36,8 @@ class LoadStore: ObservableObject {
     
     func applyLoads(system: Gauss, nodesStore: NodesStore) {
 
-        if numLoads > 0 {
-            for i in 0...numLoads - 1 {
+        if loads.count > 0 {
+            for i in 0...loads.count - 1 {
                 // place load value in RHS vector
                 let node = self.loads[i].loadNode
 
@@ -65,7 +65,7 @@ class LoadStore: ObservableObject {
         print("Applied Loads")
         print("id     Node    Direction     Value")
         print()
-        for i in 0...numLoads-1 {
+        for i in 0...loads.count-1 {
             print(String(format: " %i     %i    %i     %.2f",loads[i].id,loads[i].loadNode, loads[i].loadDirection, loads[i].loadValue) )
         }
         print()

@@ -10,50 +10,93 @@ import SwiftUI
 
 struct LoadView: View {
     
+    @Binding var scene: ModelScene
     var load: Load
+    @Bindable var nodesStore : NodesStore
+    @Bindable var truss2DStore: Truss2DStore
+    @Bindable var frame2DStore: Frame2DStore
+    @Bindable var truss3DStore: Truss3DStore
+    @Bindable var frame3DStore: Frame3DStore
+    @Bindable var dispStore: DispStore
+    @Bindable var bcStore: BCStore
     @Bindable var loadStore: LoadStore
+    
+    @Binding var isEditing: Bool
+    
     @Environment(\.presentationMode) private var showDetail
 
+    @State private var localNode: Int? = nil
+    @State private var localDirection: Int? = nil
+    @State private var localLoadValue: Double? = nil
     
+    @State private var pickerDirection: Int = 0
+
     var body: some View {
         VStack {
             Text("LOAD DETAIL").font(.custom("Arial", size: 25))
             
             VStack(alignment: .leading) {
-                Text("ID: \(load.id)").font(.custom("Arial", size: 20))
+                Text("ID: \(load.id)")
                 HStack {
-                    Text("Node:").font(.custom("Arial", size: 20))
-                    TextField("\(load.loadNode)", text:
-                        $loadStore.loadNodeText)
-                        .textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("Node:")
+                    TextField("\(load.loadNode)", value:
+                                $localNode, format: .number)
                 }
+                .textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
                 HStack {
-                    Text("Direction:").font(.custom("Arial", size: 20))
-                    Picker("", selection: self.$loadStore.loadDirectionText) {
-                        Text("X").tag("X").font(.custom("Arial", size: 20))
-                        Text("Y").tag("Y").font(.custom("Arial", size: 20))
-                        Text("Z").tag("Z").font(.custom("Arial", size: 20))
-                        Text("XX").tag("XX").font(.custom("Arial", size: 20))
-                        Text("YY").tag("YY").font(.custom("Arial", size: 20))
-                        Text("ZZ").tag("ZZ").font(.custom("Arial", size: 20))
+                    Text("Direction:")
+                    Picker("", selection: $pickerDirection) {
+                        Text("X").tag(0)
+                        Text("Y").tag(1)
+                        Text("Z").tag(2)
+                        Text("XX").tag(3)
+                        Text("YY").tag(4)
+                        Text("ZZ").tag(5)
                     }.pickerStyle(SegmentedPickerStyle())
+                        .font(.custom("Arial", size: 20))
                         .foregroundColor(Color.white)
                         .background(Color.red)
                         .cornerRadius(10)
                         .shadow(radius: 10)
-
+                    
+                    
                 }
+                
                 HStack {
-                    Text("Value:").font(.custom("Arial", size: 20))
-                    TextField("\(load.loadValue)", text:
-                        $loadStore.loadValueText)
-                        .textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
-                }            }
+                    Text("Value:")
+                    TextField(String(format: "%.2f", self.load.loadValue), value: $localLoadValue, format: .number)
+                }
+            }
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .padding()
+            .font(.custom("Arial", size: 20))
             
             
             HStack {
                 Spacer()
                 Button (action: {
+                    
+                    //MARK: - Add new load
+                    if !isEditing {
+                        if localNode == nil {
+                            localNode = 0
+                        }
+//                        if localDirection == nil {
+                            localDirection = pickerDirection
+//                        }
+                        if localLoadValue == nil {
+                            localLoadValue = 0.0
+                        }
+                        
+                        let newLoad = Load(id:self.load.id, loadNode: localNode!, loadDirection: localDirection!, loadValue: localLoadValue!)
+//                        let newLoad = Load(id:self.load.id)
+                        self.loadStore.addLoad(load: newLoad)
+                        
+                        // MARK: -                           ReDraw entire model
+                        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                        isEditing.toggle()
+                    
+                    /*
                      var nodeTemp = Int(self.loadStore.loadNodeText)
                      if  nodeTemp == nil {
                          nodeTemp = self.loadStore.loads[self.load.id].loadNode
@@ -86,6 +129,31 @@ struct LoadView: View {
                      let newLoad = Load(id:self.load.id, loadNode: nodeTemp!, loadDirection: loadDirectionTemp, loadValue: loadValueTemp!)
                      self.loadStore.changeLoad(load: newLoad)
                      self.loadStore.printLoads()
+                   */
+                        
+                    } else {
+                        //MARK: - Make changes to exisiting Load
+                        if localNode == nil {
+                            localNode = load.loadNode
+                        }
+                        if pickerDirection != load.loadDirection {
+                            localDirection = pickerDirection
+                        }else{
+                            localDirection = load.loadDirection
+                        }
+                        if localLoadValue == nil {
+                            localLoadValue = load.loadValue
+                        }
+                        
+                        loadStore.loads[load.id].loadNode = localNode!
+                        loadStore.loads[load.id].loadDirection = localDirection!
+                        loadStore.loads[load.id].loadValue = localLoadValue!
+                        
+                        // MARK: -                           ReDraw entire model
+                        
+                        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                    }
+                    self.loadStore.printLoads()
                     
                     self.showDetail.wrappedValue.dismiss()
 
@@ -103,12 +171,16 @@ struct LoadView: View {
             Spacer()
             
         }// Vstack
+        .onAppear(perform: {
+            pickerDirection = load.loadDirection
+        })
     }// body
+      
 }
 
-#Preview(traits: .landscapeLeft) {
-    LoadView(load: Load(id:0 ,loadNode: 0, loadDirection: 0, loadValue: 0 ), loadStore: LoadStore() )
-}
+//#Preview(traits: .landscapeLeft) {
+//    LoadView(load: Load(id:0 ,loadNode: 0, loadDirection: 0, loadValue: 0 ), loadStore: LoadStore() )
+//}
 
 /*
 #if DEBUG

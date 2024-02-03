@@ -140,10 +140,14 @@ struct ContentView: View {
         .sheet(isPresented: $showElLibraryList, content: {
             ElementTypeView(scene: $scene, nodesStore: nodesStore, truss2DStore: truss2DStore,  frame2DStore: frame2DStore, truss3DStore: truss3DStore,frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore)
             .presentationDragIndicator(.visible)})
-
+        
+        .sheet(isPresented: $showBCList, content: {
+            BCList(scene: $scene, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore)
+                .presentationDragIndicator(.visible)
+        })
         
         .sheet(isPresented: $showLoadsList, content: {
-            LoadList(loadStore: loadStore)
+            LoadList(scene: $scene, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore)
             .presentationDragIndicator(.visible)})
         
         .sheet(isPresented: $showSolutionControl, content: {

@@ -34,7 +34,7 @@ struct SolutionControlView: View {
 
     var body: some View {
             VStack {
-
+                Spacer()
                 Button(action: {
                         
 //                    let debugFlag: Bool = false  //debug Flag
@@ -225,16 +225,21 @@ struct SolutionControlView: View {
                     self.dispStore.printDispStore(numNodes: self.nodesStore.nodes.count)
                         
                         
-                })  {Text ("Perform Solution Procedure").font(.title)}
+                })  {
+                    
+                    Text ("Perform Solution Procedure").font(.title)
+                }
                         .background(Color.red)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                         .shadow(radius: 10  )
-                HStack {
+                HStack() {
                     Spacer()
                     Toggle(isOn: $debugFlag){
                         Text("Debug Flag")
-                    }
+                    }.frame(maxWidth: 200)
+                    Spacer()
+                    Spacer()
                 }
 
                 
