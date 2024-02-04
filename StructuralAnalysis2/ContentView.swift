@@ -110,6 +110,12 @@ struct ContentView: View {
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     })
                     
+                    Button(action: {
+                        scene = ModelScene()
+                    }, label: {
+                        Text("Refresh Model View")
+                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                    })
                     Spacer()
                 }
                
@@ -117,8 +123,19 @@ struct ContentView: View {
             
             ModelView(scene: $scene, nodesStore: nodesStore, dispStore: dispStore, bcStore: bcStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore)
                 .onAppear(perform: {
-                    print("ModelView appeared")
+                    print("ModelView appeared in ContentView")
+                    
                 })
+                .onChange(of: scene.rootNode.geometry) {
+                    print("scene geometry changed in ContentView")
+                }
+                .onChange(of: scene.rootNode.childNodes.count){
+                    print("scene childNodes changed in ContentView")
+                    scene = ModelScene()
+                    
+                    scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                }
+            
                 
             
             Spacer()
@@ -160,6 +177,7 @@ struct ContentView: View {
             .presentationDragIndicator(.visible)})
         
         .sheet(isPresented: $showModelView, content: {
+            
             ModelView(scene: $scene, nodesStore: nodesStore, dispStore: dispStore, bcStore: bcStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore)
             .presentationDragIndicator(.visible)})
     }

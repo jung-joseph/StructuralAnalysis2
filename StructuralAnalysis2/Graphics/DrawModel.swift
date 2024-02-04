@@ -226,6 +226,14 @@ class DrawModel{
         scene.rootNode.enumerateChildNodes { (node, stop) in
             node.removeFromParentNode()
         }
+
+//        scene.allowsCameraControl = true
+        
+        let viewPoint = self.findViewPoint(nodesStore: nodesStore)
+        let cameraNode = createCameraNode()
+        cameraNode.camera = SCNCamera()
+        scene.rootNode.addChildNode(cameraNode)
+        cameraNode.position = viewPoint
         
         self.viewNodes(nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
         self.viewBCs(bcStore: bcStore, nodesStore: nodesStore, dims: dimensions, scene: scene)

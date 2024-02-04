@@ -29,6 +29,7 @@ struct ModelView: View {
         SceneView(scene: scene, options:[.autoenablesDefaultLighting, .allowsCameraControl])
             .onAppear(perform: {
                 print("SceneView appeared")
+                
                 scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
 
             })
@@ -36,6 +37,7 @@ struct ModelView: View {
             .onChange(of: scene.rootNode.childNodes.count){
                 
                 print("number of nodes of scene of SceneView Changed")
+                
             }
             .onChange(of: scene.rootNode.geometry) {
                 print("geomety of scene of SceneView Changed")
