@@ -103,15 +103,11 @@ struct ContentView: View {
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     })
                     
-                    Button(action: {
-                        showModelView.toggle()
-                    }, label: {
-                        Text("Model View")
-                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                    })
-                    
+      
                     Button(action: {
                         scene = ModelScene()
+                        
+                        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
                     }, label: {
                         Text("Refresh Model View")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
@@ -176,10 +172,7 @@ struct ContentView: View {
             DispList(dispStore: dispStore)
             .presentationDragIndicator(.visible)})
         
-        .sheet(isPresented: $showModelView, content: {
-            
-            ModelView(scene: $scene, nodesStore: nodesStore, dispStore: dispStore, bcStore: bcStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore)
-            .presentationDragIndicator(.visible)})
+
     }
 }
 func createCameraNode() -> SCNNode {
