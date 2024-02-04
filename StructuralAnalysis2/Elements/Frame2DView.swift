@@ -58,7 +58,6 @@ struct Frame2DView: View {
                         if node1IsOn {
                             Text("ON").font(.custom("Arial", size: 20))
                         }
-//                        frame2DStore.frame2DElements[frame2d.id].pin1 = true
                         
                     }
                 }
@@ -72,13 +71,12 @@ struct Frame2DView: View {
                         if node2IsOn {
                             Text("ON").font(.custom("Arial", size: 20))
                         }
-//                        frame2DStore.frame2DElements[frame2d.id].pin2 = true
 
                     }
                 }
-                .textFieldStyle(RoundedBorderTextFieldStyle()).padding()
-                    .font(.custom("Arial", size: 20))
-            }
+                
+            }.textFieldStyle(RoundedBorderTextFieldStyle()).padding()
+                .font(.custom("Arial", size: 20))
             
             HStack {
                 Spacer()

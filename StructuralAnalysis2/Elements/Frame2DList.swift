@@ -32,7 +32,7 @@ struct Frame2DList: View {
     
     var body: some View {
         
-        NavigationView {
+        NavigationStack {
             
             VStack {
              
