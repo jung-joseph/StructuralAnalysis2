@@ -57,6 +57,7 @@ struct NodeView : View {
                     .textFieldStyle(RoundedBorderTextFieldStyle()).padding()
                 HStack{
                     Spacer()
+                    
                     Button (action: {
                         
 

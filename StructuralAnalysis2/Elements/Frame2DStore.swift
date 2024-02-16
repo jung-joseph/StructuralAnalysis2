@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 @Observable
-class Frame2DStore {
+class Frame2DStore: Encodable {
     
     var frame2DElements: [Frame2D] = []
 //    var numFrame2DElements: Int = 0

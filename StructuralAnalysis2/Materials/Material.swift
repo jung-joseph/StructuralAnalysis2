@@ -9,7 +9,14 @@
 import Foundation
 import SwiftUI
 
-struct Material: Identifiable {
+struct Material: Codable, Identifiable {
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case youngsModulus
+        case shearModulus
+    }
+    
     var id: Int
     var youngsModulus: Double = 0.0
     var shearModulus: Double = 0.0

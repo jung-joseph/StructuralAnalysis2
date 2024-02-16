@@ -10,13 +10,17 @@ import Combine
 import SwiftUI
 
 @Observable
-class DispStore: ObservableObject {
+class DispStore: Encodable{
     
     var displacements : [NodalDisp]?
 
     init() {
         print("Initializing DispStore")
     }
+    
+//     enum CodingKeys: CodingKey {
+//        case displacments
+//    }
     
     func fillDispStore (x: [Double], nodesStore: NodesStore, truss2DStore: Truss2DStore, frame2DStore: Frame2DStore, truss3DStore: Truss3DStore, frame3DStore: Frame3DStore) {
         

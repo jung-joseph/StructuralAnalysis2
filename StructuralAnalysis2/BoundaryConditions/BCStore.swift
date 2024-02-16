@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 @Observable
-class BCStore{
+class BCStore: Encodable{
     
        var bcs: [BC] = []
 //       var numBCs: Int

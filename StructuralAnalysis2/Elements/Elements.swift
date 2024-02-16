@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 import simd
 
-class Elements {
+class Elements: Codable {
  
     
     //MARK: - Properties
@@ -20,6 +20,14 @@ class Elements {
     var elementType : String
     var connectivity = [[Int]]()
     var elementStiffness = [[Double]]()
+    
+    enum CodingKeys: CodingKey {
+        case numNodesPerEl
+        case numDOFPerNode
+        case elementType
+        case connectivity
+        case elementStiffness
+    }
     
 //    @ObservedObject var nodesStore : NodesStore
 //    @ObservedObject var materialStore : MaterialStore
@@ -152,7 +160,17 @@ class Truss2D: Elements, Identifiable {
     //MARK: - Properties
     
     // Inherting:elPropertyStore,materialStore,nodesStore
-
+    enum CodingKeys: CodingKey {
+        case id
+        case matId
+        case propertiesID
+        case node1
+        case node2
+        case area
+        case length
+        case youngsModulus
+    }
+    
     var id: Int = 0
     var matID: Int = 0
     var propertiesID: Int = 0
@@ -198,7 +216,11 @@ class Truss2D: Elements, Identifiable {
         
         
     }
-
+    
+    required init(from decoder: Decoder) throws {
+        fatalError("init(from:) has not been implemented")
+    }
+    
   
     
     func elStiffMatrix(node1: Node, node2: Node, youngsM: Double, crossArea: Double, len: Double)->[[Double]] {
@@ -295,7 +317,19 @@ class Frame2D: Elements, Identifiable {
     //MARK: - Properties
     
     // Inherting:elPropertyStore,materialStore,nodesStore
-
+    enum CodingKeys: CodingKey {
+        case id
+        case matId
+        case propertiesID
+        case node1
+        case node2
+        case area
+        case length
+        case youngsModulus
+        case pin1
+        case pin2
+    }
+    
     var id: Int = 0
     var matID: Int = 0
     var propertiesID: Int = 0
@@ -346,7 +380,11 @@ class Frame2D: Elements, Identifiable {
         
         
     }
-
+    
+    required init(from decoder: Decoder) throws {
+        fatalError("init(from:) has not been implemented")
+    }
+    
   
     
     func elStiffMatrix(node1: Node, node2: Node, youngsM: Double, crossArea: Double, len: Double, izz: Double)->[[Double]] {
@@ -516,7 +554,17 @@ class Frame2D: Elements, Identifiable {
         //MARK: - Properties
         
         // Inherting:elPropertyStore,materialStore,nodesStore
-
+        enum CodingKeys: CodingKey {
+            case id
+            case matId
+            case propertiesID
+            case node1
+            case node2
+            case area
+            case length
+            case youngsModulus
+        }
+        
         var id: Int = 0
         var matID: Int = 0
         var propertiesID: Int = 0
@@ -562,7 +610,11 @@ class Frame2D: Elements, Identifiable {
             
             
         }
-
+        
+        required init(from decoder: Decoder) throws {
+            fatalError("init(from:) has not been implemented")
+        }
+        
       
         
         func elStiffMatrix(node1: Node, node2: Node, youngsM: Double, crossArea: Double, len: Double)->[[Double]] {
@@ -708,7 +760,19 @@ class Frame2D: Elements, Identifiable {
             //MARK: - Properties
             
             // Inherting:elPropertyStore,materialStore,nodesStore
-
+            enum CodingKeys: CodingKey {
+                case id
+                case matId
+                case propertiesID
+                case node1
+                case node2
+                case area
+                case length
+                case youngsModulus
+                case pin1
+                case pin2
+                case small
+            }
             var id: Int = 0
             var matID: Int = 0
             var propertiesID: Int = 0
@@ -759,7 +823,11 @@ class Frame2D: Elements, Identifiable {
                 
                 
             }
-
+            
+            required init(from decoder: Decoder) throws {
+                fatalError("init(from:) has not been implemented")
+            }
+            
           
             
             func elStiffMatrix(node1: Node, node2: Node, youngsM: Double, G: Double, crossArea: Double, len: Double, izz: Double, iyy: Double, ixx: Double)->[[Double]] {

@@ -8,7 +8,11 @@
 
 import Foundation
 
-struct NodalDisp : Identifiable {
+struct NodalDisp : Codable, Identifiable {
+    enum CodingKeys: CodingKey {
+        case id
+        case u
+    }
     var id : Int
     var u : [Double] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
  

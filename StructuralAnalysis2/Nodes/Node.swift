@@ -9,8 +9,17 @@
 import Foundation
 import SwiftUI
 
-struct Node: Identifiable {
-    var id: Int 
+struct Node: Codable, Identifiable {
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case xcoord
+        case ycoord
+        case zcoord
+        case numDof
+        case beginDofIndex
+    }
+    var id: Int
     var xcoord: Double = 0.0
     var ycoord: Double = 0.0
     var zcoord: Double = 0.0

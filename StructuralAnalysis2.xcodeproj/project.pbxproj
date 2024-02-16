@@ -64,6 +64,7 @@
 		5303040B2B6AAE4B00FBF436 /* LoadList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530304062B6AAE4B00FBF436 /* LoadList.swift */; };
 		5303040C2B6AAE4B00FBF436 /* Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530304072B6AAE4B00FBF436 /* Load.swift */; };
 		5303040D2B6AAE4B00FBF436 /* LoadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530304082B6AAE4B00FBF436 /* LoadView.swift */; };
+		53CCA9F32B7C16F300C5869C /* SaveModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CCA9F22B7C16F300C5869C /* SaveModelView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +126,7 @@
 		530304062B6AAE4B00FBF436 /* LoadList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadList.swift; sourceTree = "<group>"; };
 		530304072B6AAE4B00FBF436 /* Load.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Load.swift; sourceTree = "<group>"; };
 		530304082B6AAE4B00FBF436 /* LoadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadView.swift; sourceTree = "<group>"; };
+		53CCA9F22B7C16F300C5869C /* SaveModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveModelView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				530303A42B6AAB5100FBF436 /* Model.swift */,
+				53CCA9F22B7C16F300C5869C /* SaveModelView.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -425,6 +428,7 @@
 				530303D02B6AAC3800FBF436 /* Frame2DStore.swift in Sources */,
 				530303EC2B6AAD3E00FBF436 /* DispStore.swift in Sources */,
 				530303F42B6AADA600FBF436 /* MaterialView.swift in Sources */,
+				53CCA9F32B7C16F300C5869C /* SaveModelView.swift in Sources */,
 				530303F52B6AADA600FBF436 /* MaterialsList.swift in Sources */,
 				530303CF2B6AAC3800FBF436 /* Frame3DStore.swift in Sources */,
 				530303D22B6AAC3800FBF436 /* Truss2DElementRow.swift in Sources */,
@@ -580,6 +584,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -609,6 +614,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

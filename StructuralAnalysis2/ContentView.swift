@@ -21,6 +21,8 @@ struct ContentView: View {
     @State var frame3DStore: Frame3DStore = Frame3DStore()
     @State var loadStore: LoadStore = LoadStore()
     @State var bcStore: BCStore = BCStore()
+    
+   
 //    @State var magFactor: Double = 1.0
 //    @State var drawModel: DrawModel = DrawModel(nodeRadius: CGFloat(0.1), elementRadius: CGFloat(0.1))
     
@@ -33,6 +35,7 @@ struct ContentView: View {
     @State var showSolutionControl: Bool = false
     @State var showDisplacements: Bool = false
     @State var showModelView: Bool = false
+    @State var showSaveModel: Bool = false
     
     
     var body: some View {
@@ -103,6 +106,13 @@ struct ContentView: View {
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     })
                     
+                    Button {
+                        showSaveModel = true
+                    } label: {
+                        Text("Save current Model")
+                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                    }
+
       
                     Button(action: {
                         scene = ModelScene()
@@ -171,6 +181,10 @@ struct ContentView: View {
         .sheet(isPresented: $showDisplacements, content: {
             DispList(dispStore: dispStore)
             .presentationDragIndicator(.visible)})
+        
+        .sheet(isPresented: $showSaveModel) {
+            SaveModelView(nodesStore: nodesStore, dispStore: dispStore, materialStore: materialStore, elPropertyStore: elPropertyStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore, bcStore: bcStore, showSaveModel: $showSaveModel)
+        }
         
 
     }

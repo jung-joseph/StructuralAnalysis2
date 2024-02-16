@@ -10,7 +10,7 @@
 import SwiftUI
 
 @Observable
-class Truss3DStore{
+class Truss3DStore: Encodable{
     
     var truss3DElements: [Truss3D] = []
 //    var numTruss3DElements: Int = 0

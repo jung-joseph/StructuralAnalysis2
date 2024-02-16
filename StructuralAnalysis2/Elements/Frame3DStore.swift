@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 @Observable
-class Frame3DStore{
+class Frame3DStore: Encodable{
     
     var frame3DElements: [Frame3D] = []
 //    var numFrame3DElements: Int = 0

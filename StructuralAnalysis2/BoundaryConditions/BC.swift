@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-struct BC: Identifiable {
+struct BC: Codable, Identifiable {
     var id: Int
     var bcNode: Int
     var bcDirection: Int

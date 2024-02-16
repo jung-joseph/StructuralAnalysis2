@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 @Observable
-class LoadStore: ObservableObject {
+class LoadStore: Encodable {
 
        var loads: [Load] = []
 //       var numLoads: Int

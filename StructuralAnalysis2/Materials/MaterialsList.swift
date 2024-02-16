@@ -13,7 +13,8 @@ struct MaterialsList : View {
     
 //    @Binding var dismissFlag: Bool
     @Bindable var materialStore : MaterialStore
-    
+    @State var isEditing: Bool = true
+
     @Environment(\.presentationMode) private var presentationMode
    
     
@@ -26,7 +27,7 @@ struct MaterialsList : View {
                 List {
 
                     ForEach(materialStore.materials) {material in
-                        NavigationLink(destination: MaterialView(material: material, materialStore: self.materialStore)){
+                        NavigationLink(destination: MaterialView(material: material, materialStore: self.materialStore, isEditing: $isEditing)){
                             MaterialRow(material: material)
                         }
                     }.onDelete(perform: delete)
@@ -34,9 +35,9 @@ struct MaterialsList : View {
                      .navigationBarItems(
                      
                      leading: Button("+") {
-                        let newMat = Material(id: self.materialStore.numMaterials)
-                        self.materialStore.textYM = "0"
-                        self.materialStore.textGM = "0"
+                         let newMat = Material(id: self.materialStore.materials.count + 1)
+//                        self.materialStore.textYM = "0"
+//                        self.materialStore.textGM = "0"
                          self.materialStore.addMaterial(material: newMat)
                      }
                      .padding()
@@ -60,7 +61,7 @@ struct MaterialsList : View {
             materialStore.materials.remove(at: first)
         }
         
-        materialStore.numMaterials -= 1
+//        materialStore.numMaterials -= 1
         
         
         for index in 0...materialStore.materials.count - 1{

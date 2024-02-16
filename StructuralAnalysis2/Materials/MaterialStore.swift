@@ -10,28 +10,28 @@ import Combine
 import SwiftUI
 
 @Observable
-class MaterialStore {
+class MaterialStore: Encodable {
     
 
     
     var materials: [Material]
     
-    var numMaterials : Int
-    
-    var textYM : String = ""
-    
-    var textGM : String = ""
+//    var numMaterials : Int = 0
+//
+//    var textYM : String = ""
+//    
+//    var textGM : String = ""
    
     
     init() {
         
         print("Initialize MaterialStore")
-        numMaterials = 0
+//        numMaterials = 0
         var material1 = Material(id: 0)
         material1.id = 0
         material1.youngsModulus = 30.0e6
         material1.shearModulus = 11.5e6
-        self.numMaterials = 1
+//        self.numMaterials = 1
         
         materials = [material1]
         //
@@ -41,7 +41,7 @@ class MaterialStore {
     
     func addMaterial(material: Material) {
         materials.append(material)
-        self.numMaterials += 1
+//        self.numMaterials += 1
     }
     
     func changeMaterials(material: Material) {
@@ -52,10 +52,10 @@ class MaterialStore {
     func printMaterials() {
         print(" ")
         print("Materials")
-        print("numMaterials \(numMaterials)")
+        print("numMaterials \(materials.count)")
         print("id    Youngs Modulus")
         print()
-        for  i in 0...numMaterials-1 {
+        for  i in 0...materials.count-1 {
             print("\(materials[i].id)   \(materials[i].youngsModulus)  " )
         }
         print()

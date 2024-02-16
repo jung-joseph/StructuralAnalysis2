@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 @Observable
-class Truss2DStore: Equatable{
+class Truss2DStore: Encodable, Equatable{
     static func == (lhs: Truss2DStore, rhs: Truss2DStore) -> Bool {
         return lhs.truss2DElements.count == rhs.truss2DElements.count
 

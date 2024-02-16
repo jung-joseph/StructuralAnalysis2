@@ -10,19 +10,12 @@ import Combine
 import SwiftUI
 
 @Observable
-class NodesStore{
+class NodesStore: Encodable {
         
     var nodes: [Node]
-    
-//    var numNodes : Int = 0
-    
     var totalNumDofs : Int = 0
     
-//    var tempText1 : String = ""
-//    
-//    var tempText2 : String = ""
-//    
-//    var tempText3 : String = ""
+
     
     init() {
         print("Intialize NodeStore")
@@ -48,7 +41,15 @@ class NodesStore{
 //        self.printNodes()
         //
     }
-    
+//    func encodeNodeStore() -> Data?{
+//        if let encodedNodesStore = try? JSONEncoder().encode(nodes)  {
+//            print("nodes encoded")
+//            return encodedNodesStore
+//        } else {
+//            print("nodes encoding failed")
+//            return nil
+//        }
+//    }
     func addNode(node: Node) {
         nodes.append(node)
 //        self.numNodes += 1

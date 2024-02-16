@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-struct Load: Identifiable{
+struct Load: Codable, Identifiable{
     var id: Int
     var loadNode: Int
     var loadDirection: Int
