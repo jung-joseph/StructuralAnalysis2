@@ -10,6 +10,14 @@ import Foundation
 import SwiftUI
 
 struct Load: Codable, Identifiable{
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case loadNode
+        case loadDirection
+        case loadValue
+    }
+    
     var id: Int
     var loadNode: Int
     var loadDirection: Int

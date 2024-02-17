@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SceneKit
+import FilePicker
 
 struct ContentView: View {
     
@@ -35,8 +36,21 @@ struct ContentView: View {
     @State var showSolutionControl: Bool = false
     @State var showDisplacements: Bool = false
     @State var showModelView: Bool = false
-    @State var showSaveModel: Bool = false
+    @State var showSaveModelView: Bool = false
+    @State var showLoadModelView: Bool = false
     
+    enum CodingKeys: CodingKey {
+        case nodesStore
+        case dispStore
+        case materialStore
+        case elPropertyStore
+        case truss2DStore
+        case frame2DStore
+        case truss3DStore
+        case frame3DStore
+        case loadStore
+        case bcStore
+    }
     
     var body: some View {
         
@@ -107,13 +121,47 @@ struct ContentView: View {
                     })
                     
                     Button {
-                        showSaveModel = true
+                        showSaveModelView = true
                     } label: {
-                        Text("Save current Model")
+                        Text("Save Model")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     }
 
-      
+                    FilePicker(types: [.plainText], allowMultiple: false, title: "Load A Model" ){ urls in
+                        print("selected \(urls.count) file(s)")
+                        print("URL: \(urls[0])")
+
+                        let fileUrl = urls[0]
+                        if let dataIn = try? Data(contentsOf: fileUrl){
+                            print("Sucessful Data call")
+                            if  let model = try? JSONDecoder().decode(Model.self, from: (dataIn) ){
+                                
+                                print("model nodes: \(model.nodesStore.nodes)")
+                                self.nodesStore = model.nodesStore
+                                self.materialStore = model.materialStore
+                                self.elPropertyStore = model.elPropertyStore
+                                self.truss2DStore = model.truss2DStore
+                                self.frame2DStore = model.frame2DStore
+                                self.truss3DStore = model.truss3DStore
+                                self.frame3DStore = model.frame3DStore
+                                self.loadStore = model.loadStore
+                                self.bcStore = model.bcStore
+// refresh graphics
+                                scene = ModelScene()
+                                
+                                scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                            } else {
+                                print("Decoder Failure")
+                            }
+
+                        } else {
+                            print("Data call Failure")
+                        }
+                        
+                        
+                    }
+                    .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+
                     Button(action: {
                         scene = ModelScene()
                         
@@ -182,8 +230,8 @@ struct ContentView: View {
             DispList(dispStore: dispStore)
             .presentationDragIndicator(.visible)})
         
-        .sheet(isPresented: $showSaveModel) {
-            SaveModelView(nodesStore: nodesStore, dispStore: dispStore, materialStore: materialStore, elPropertyStore: elPropertyStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore, bcStore: bcStore, showSaveModel: $showSaveModel)
+        .sheet(isPresented: $showSaveModelView) {
+            SaveModelView(nodesStore: nodesStore, dispStore: dispStore, materialStore: materialStore, elPropertyStore: elPropertyStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore, bcStore: bcStore, showSaveModelView: $showSaveModelView)
         }
         
 

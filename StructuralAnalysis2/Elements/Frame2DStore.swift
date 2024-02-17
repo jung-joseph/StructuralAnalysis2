@@ -10,17 +10,27 @@ import Combine
 import SwiftUI
 
 @Observable
-class Frame2DStore: Encodable {
+class Frame2DStore: Encodable, Decodable {
     
     var frame2DElements: [Frame2D] = []
-//    var numFrame2DElements: Int = 0
-//    var matIDText : String = ""
-//    var propertyIDText : String = ""
-//    var node1Text : String = ""    
-//    var node2Text : String = ""
-
+    
+    private enum CodingKeys: CodingKey {
+        case frame2DElements
+    }
+    
     init() {
         print("Initializing Frame2DStore")
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.frame2DElements = try container.decode([Frame2D].self, forKey: .frame2DElements)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(frame2DElements, forKey: .frame2DElements)
+
     }
     
     func addFrame2DEl(element: Frame2D){

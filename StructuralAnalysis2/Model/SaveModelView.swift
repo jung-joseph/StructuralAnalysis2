@@ -19,7 +19,7 @@ struct SaveModelView: View{
     @Bindable var loadStore: LoadStore
     @Bindable var bcStore: BCStore
     
-    @Binding var showSaveModel: Bool
+    @Binding var showSaveModelView: Bool
     @State var filename: String = ""
     
     enum CodingKeys: CodingKey {
@@ -40,44 +40,28 @@ struct SaveModelView: View{
             Button {
                 print("Executing Save Button")
                 let filePath = self.getDocumentsDirectoryUrl().appendingPathComponent(filename, conformingTo: .plainText )
-                print("filePath")
+                print("filePath: \(filePath)")
                 // Encode Model
                 let jsonEncoder = JSONEncoder()
-                let model = Model(nodesStore: nodesStore, dispStore: dispStore, materialStore: materialStore, elPropertyStore: elPropertyStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore, bcStore: bcStore)
+                let model = Model(nodesStore: nodesStore, materialStore: materialStore, elPropertyStore: elPropertyStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore, bcStore: bcStore)
                 do {
                     let modelJson = try? jsonEncoder.encode(model)
-//                    let modelJsonString = String(data: modelJson!, encoding: .utf8)
-                    // write to file
- 
-                    try modelJson!.write(to: filePath)
-                } catch {
-                    print("Error writing JSOn file \(error)")
-                }
-//                let modelJson = try! jsonEncoder.encode(model)
-//                let modelJsonString = String(data: modelJson, encoding: .utf8)
-//                print("\(String(describing: modelJsonString))")
-               
-                
-                
-                /*
-                let filePath = self.getDocumentsDirectoryUrl().appendingPathComponent(filename, conformingTo: .plainText )
-                do {
+                    let modelJsonString = String(data: modelJson!, encoding: .utf8)
+                    print("JSON file of current Model: ")
+                    print("\(String(describing: modelJsonString))")
                     
-//                    var container = JSONEncoder().container(keyedBy: CodingKeys.self)
-//                    try container.encode(nodesStore.nodes,forKey: .nodes)
-//                    try container.encode(nodesStore.totalNumDofs, forKey: .totalNumDofs)
-//        //            let tempEncodedData = String(data: jsonResultData!, encoding: .utf8)
-//                    print(String(data: container))
-//                    try container.write(to: filePath)
+                    // write to file
+                    
+                    try modelJson!.write(to: filePath)
                     
                 } catch {
                     print("Error writing JSON file \(error)")
                 }
-                 */
-                showSaveModel = false
+                showSaveModelView = false
             } label: {
                 Text("Save Model to Files")
-            }
+            }.background(.green)
+                .clipShape(Capsule())
 
         }
     }

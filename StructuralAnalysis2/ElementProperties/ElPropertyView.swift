@@ -12,7 +12,17 @@ struct ElPropertyView: View {
     
     var elProperty: ElProperty
     @Bindable var elPropertyStore : ElPropertyStore
+    
+    @Binding var isEditing: Bool
+    
     @Environment(\.presentationMode) private var showDetail
+
+ 
+    @State private var localArea: Double?
+    @State private var localIZZ: Double?
+    @State private var localIYY: Double?
+    @State private var localIXY: Double?
+    @State private var localIJ: Double?
 
     
     var body: some View {
@@ -20,36 +30,90 @@ struct ElPropertyView: View {
             Text("ELEMENT PROPERTY DETAIL").font(.custom("Arial", size: 25))
           
             VStack(alignment: .leading) {
-                Text("ID: \(elProperty.id)").font(.custom("Arial", size: 20))
+                Text("ID: \(elProperty.id)")
                 HStack {
-                    Text("Area:").font(.custom("Arial", size: 20))
-                    TextField("\(elProperty.area)", text:
-                        $elPropertyStore.areaText).textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("Area:")
+                    TextField("\(elProperty.area)", value:
+                                $localArea, format:.number)
+                    
                 }
                 HStack {
-                    Text("Izz:").font(.custom("Arial", size: 20))
-                    TextField("\(elProperty.iZZ)", text:
-                        $elPropertyStore.ixxText).textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("Izz:")
+                    TextField("\(elProperty.iZZ)", value:
+                                $localIZZ, format: .number)
+                    
                 }
                 HStack {
-                    Text("Iyy:").font(.custom("Arial", size: 20))
-                    TextField("\(elProperty.iYY)", text:
-                        $elPropertyStore.iyyText).textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("Iyy:")
+                    TextField("\(elProperty.iYY)", value:
+                                $localIYY, format: .number)
+                    
                 }
                 HStack {
-                    Text("Ixy:").font(.custom("Arial", size: 20))
-                    TextField("\(elProperty.iXY)", text:
-                        $elPropertyStore.ixyText).textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("Ixy:")
+                    TextField("\(elProperty.iXY)", value:
+                                $localIXY, format: .number)
+                    
                 }
                 HStack {
-                    Text("IJ:").font(.custom("Arial", size: 20))
-                    TextField("\(elProperty.iJ)", text:
-                        $elPropertyStore.ijText).textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+                    Text("IJ:")
+                    TextField("\(elProperty.iJ)", value:
+                                $localIJ, format:.number)
                 }
           }
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .padding()
+            .font(.custom("Arial", size: 20))
+            
             HStack {
                 Spacer()
                  Button (action: {
+                     
+                     if !isEditing {
+                         if localArea == nil {
+                             localArea = 0.0
+                         }
+                         if localIZZ == nil {
+                             localIZZ = 0.0
+                         }
+                         if localIYY == nil {
+                             localIYY = 0.0
+                         }
+                         if localIXY == nil {
+                             localIXY = 0.0
+                         }
+                         if localIJ == nil {
+                             localIJ = 0.0
+                         }
+                         let newElProperty = ElProperty(id: self.elProperty.id, area: localArea!, iZZ: localIZZ!, iYY: localIYY!, iXY: localIXY!, iJ: localIJ!)
+                         self.elPropertyStore.addElProperty(elProperty: newElProperty)
+                     } else {
+                         if localArea == nil {
+                             localArea = elProperty.area
+                         }
+                         if localIZZ == nil {
+                             localIZZ = elProperty.iZZ
+                         }
+                         if localIYY == nil {
+                             localIYY = elProperty.iYY
+                         }
+                         if localIXY == nil {
+                             localIXY = elProperty.iXY
+                         }
+                         if localIJ == nil {
+                             localIJ = elProperty.iJ
+                         }
+                         elPropertyStore.elProperties[elProperty.id].area = localArea!
+                         elPropertyStore.elProperties[elProperty.id].iZZ = localIZZ!
+                         elPropertyStore.elProperties[elProperty.id].iYY = localIYY!
+                         elPropertyStore.elProperties[elProperty.id].iXY = localIXY!
+                         elPropertyStore.elProperties[elProperty.id].iJ = localIJ!
+
+
+                     }
+                     
+                     
+/*
                      var areatemp = Double(self.elPropertyStore.areaText)
                      if  areatemp == nil {
                          areatemp = self.elPropertyStore.elProperties[self.elProperty.id].area
@@ -83,7 +147,7 @@ struct ElPropertyView: View {
                      let newElProperty = ElProperty(id: self.elProperty.id, area: areatemp!, iZZ: izztemp!, iYY: iyytemp!, iXY: ixytemp!, iJ: ijtemp!)
                      self.elPropertyStore.changeProperties(elProperty: newElProperty)
                      self.elPropertyStore.printElProperties()
-                    
+ */
                     self.showDetail.wrappedValue.dismiss()
 
 
@@ -102,10 +166,10 @@ struct ElPropertyView: View {
     }
 }
 
-#if DEBUG
-struct ElPropertyView_Previews: PreviewProvider {
-    static var previews: some View {
-        ElPropertyView(elProperty: ElProperty(id: 0), elPropertyStore: ElPropertyStore())
-    }
-}
-#endif
+//#if DEBUG
+//struct ElPropertyView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ElPropertyView(elProperty: ElProperty(id: 0), elPropertyStore: ElPropertyStore())
+//    }
+//}
+//#endif

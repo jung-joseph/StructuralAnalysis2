@@ -10,12 +10,25 @@ import Combine
 import SwiftUI
 
 @Observable
-class NodesStore: Encodable {
+class NodesStore: Encodable, Decodable {
         
+    private enum CodingKeys: CodingKey {
+        case nodes
+        case totalNumDofs
+    }
+    
     var nodes: [Node]
     var totalNumDofs : Int = 0
-    
 
+    
+    required init(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        nodes = try container.decode([Node].self, forKey: .nodes)
+        totalNumDofs = try container.decode(Int.self, forKey: .totalNumDofs)
+
+
+    }
     
     init() {
         print("Intialize NodeStore")
@@ -41,15 +54,14 @@ class NodesStore: Encodable {
 //        self.printNodes()
         //
     }
-//    func encodeNodeStore() -> Data?{
-//        if let encodedNodesStore = try? JSONEncoder().encode(nodes)  {
-//            print("nodes encoded")
-//            return encodedNodesStore
-//        } else {
-//            print("nodes encoding failed")
-//            return nil
-//        }
-//    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(nodes, forKey: .nodes)
+        try container.encode(totalNumDofs, forKey: .totalNumDofs)
+
+    }
+    
     func addNode(node: Node) {
         nodes.append(node)
 //        self.numNodes += 1

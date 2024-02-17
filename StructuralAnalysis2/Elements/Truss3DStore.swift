@@ -10,17 +10,26 @@
 import SwiftUI
 
 @Observable
-class Truss3DStore: Encodable{
+class Truss3DStore: Encodable, Decodable{
     
     var truss3DElements: [Truss3D] = []
-//    var numTruss3DElements: Int = 0
-//    var matIDText : String = ""
-//    var propertyIDText : String = ""
-//    var node1Text : String = ""
-//    var node2Text : String = ""
 
+    private enum CodingKeys: CodingKey {
+        case truss3DElements
+    }
+    
     init() {
         print("Initializing Truss2DStore")
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.truss3DElements = try container.decode([Truss3D].self, forKey: .truss3DElements)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(truss3DElements, forKey: .truss3DElements)
     }
     
     func addTruss3DEl(element: Truss3D){

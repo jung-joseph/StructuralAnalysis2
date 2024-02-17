@@ -10,9 +10,9 @@ import SwiftUI
 import Combine
 
 @Observable
-class BCStore: Encodable{
+class BCStore: Encodable, Decodable{
     
-       var bcs: [BC] = []
+       var bcs: [BC]
 //       var numBCs: Int
 //       var bcNodeText: String = ""
 //       var bcDirectionText: String = ""
@@ -26,6 +26,19 @@ class BCStore: Encodable{
 //        numBCs = 1
         bcs = [bc1]
         
+    }
+    private enum CodingKeys: CodingKey {
+        case bcs
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.bcs = try container.decode([BC].self, forKey: .bcs)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(bcs.self, forKey: .bcs)
     }
     
     func addBC(bc: BC) {

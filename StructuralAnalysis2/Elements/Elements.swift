@@ -26,7 +26,7 @@ class Elements: Codable {
         case numDOFPerNode
         case elementType
         case connectivity
-        case elementStiffness
+//        case elementStiffness
     }
     
 //    @ObservedObject var nodesStore : NodesStore
@@ -45,6 +45,23 @@ class Elements: Codable {
 
     }
     
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.numNodesPerEl = try container.decode(Int.self, forKey: .numNodesPerEl)
+        self.numDOFPerNode = try container.decode(Int.self, forKey: .numDOFPerNode)
+        self.elementType = try container.decode(String.self, forKey: .elementType)
+        self.connectivity = try container.decode([[Int]].self, forKey: .connectivity)
+//        self.elementStiffness = try container.decode([[Double]].self, forKey: .elementStiffness)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(numNodesPerEl, forKey: .numNodesPerEl)
+        try container.encode(numDOFPerNode, forKey: .numDOFPerNode)
+        try container.encode(elementType, forKey: .elementType)
+        try container.encode(connectivity, forKey: .connectivity)
+//        try container.encode(elementStiffness, forKey: .elementStiffness)
+    }
     func angleOfRotation(node1: Node, node2: Node, axis: String) -> Double {
         
         var a1: Double
@@ -162,7 +179,7 @@ class Truss2D: Elements, Identifiable {
     // Inherting:elPropertyStore,materialStore,nodesStore
     enum CodingKeys: CodingKey {
         case id
-        case matId
+        case matID
         case propertiesID
         case node1
         case node2
@@ -180,25 +197,20 @@ class Truss2D: Elements, Identifiable {
     var length : Double
     var youngsModulus : Double
     
-    
+
     init(id: Int, matID: Int, propertiesID: Int, node1: Int, node2: Int, nodesStore: NodesStore, materialStore: MaterialStore, elPropertyStore: ElPropertyStore, truss2DStore: Truss2DStore) {
         
         print("Initializing Truss2D")
 //        print("numNodes \(nodesStore.nodes.count)")
         
+
         self.id = id
-        
         self.matID = matID
-        
         self.propertiesID = propertiesID
-        
-        
         self.node1 = node1
-        
         self.node2 = node2
-        
-        
         self.area = elPropertyStore.elProperties[propertiesID].area
+
 
         let dx = (nodesStore.nodes[node2].xcoord - nodesStore.nodes[node1].xcoord)
         let dy = (nodesStore.nodes[node2].ycoord - nodesStore.nodes[node1].ycoord)
@@ -217,11 +229,36 @@ class Truss2D: Elements, Identifiable {
         
     }
     
+
+
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        print("Decoding Truss2D")
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.matID = try container.decode(Int.self, forKey: .matID)
+        self.propertiesID = try container.decode(Int.self, forKey: .propertiesID)
+        self.node1 = try container.decode(Int.self, forKey: .node1)
+        self.node2 = try container.decode(Int.self, forKey: .node2)
+        self.area = try container.decode(Double.self, forKey: .area)
+        self.length = try container.decode(Double.self, forKey: .length)
+        self.youngsModulus = try container.decode(Double.self, forKey: .youngsModulus)
+        
+        super.init(numNodes: 2, numDOF: 2, eltype: "Truss2D")
+
+
     }
-    
-  
+
+    override func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(matID, forKey: .matID)
+        try container.encode(propertiesID, forKey: .propertiesID)
+        try container.encode(node1, forKey: .node1)
+        try container.encode(node2, forKey: .node2)
+        try container.encode(area, forKey: .area)
+        try container.encode(length, forKey: .length)
+        try container.encode(youngsModulus, forKey: .youngsModulus)
+    }
     
     func elStiffMatrix(node1: Node, node2: Node, youngsM: Double, crossArea: Double, len: Double)->[[Double]] {
         
@@ -319,7 +356,7 @@ class Frame2D: Elements, Identifiable {
     // Inherting:elPropertyStore,materialStore,nodesStore
     enum CodingKeys: CodingKey {
         case id
-        case matId
+        case matID
         case propertiesID
         case node1
         case node2
@@ -348,17 +385,10 @@ class Frame2D: Elements, Identifiable {
         print("numNodes \(nodesStore.nodes.count)")
         
         self.id = id
-        
         self.matID = matID
-        
         self.propertiesID = propertiesID
-        
-        
         self.node1 = node1
-        
         self.node2 = node2
-        
-        
         self.area = elPropertyStore.elProperties[propertiesID].area
 
         let dx = (nodesStore.nodes[node2].xcoord - nodesStore.nodes[node1].xcoord)
@@ -382,10 +412,37 @@ class Frame2D: Elements, Identifiable {
     }
     
     required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        print("Decoding Frame2D")
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.matID = try container.decode(Int.self, forKey: .matID)
+        self.propertiesID = try container.decode(Int.self, forKey: .propertiesID)
+        self.node1 = try container.decode(Int.self, forKey: .node1)
+        self.node2 = try container.decode(Int.self, forKey: .node2)
+        self.area = try container.decode(Double.self, forKey: .area)
+        self.length = try container.decode(Double.self, forKey: .length)
+        self.youngsModulus = try container.decode(Double.self, forKey: .youngsModulus)
+        self.pin1 = try container.decode(Bool.self, forKey: .pin1)
+        self.pin2 = try container.decode(Bool.self, forKey: .pin2)
+        
+        
+        super.init(numNodes: 2, numDOF: 3, eltype: "Frame2D")
     }
     
-  
+    override func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(matID, forKey: .matID)
+        try container.encode(propertiesID, forKey: .propertiesID)
+        try container.encode(node1, forKey: .node1)
+        try container.encode(node2, forKey: .node2)
+        try container.encode(area, forKey: .area)
+        try container.encode(length, forKey: .length)
+        try container.encode(youngsModulus, forKey: .youngsModulus)
+        try container.encode(pin1, forKey: .pin1)
+        try container.encode(pin2, forKey: .pin2)
+    }
     
     func elStiffMatrix(node1: Node, node2: Node, youngsM: Double, crossArea: Double, len: Double, izz: Double)->[[Double]] {
         
@@ -556,7 +613,7 @@ class Frame2D: Elements, Identifiable {
         // Inherting:elPropertyStore,materialStore,nodesStore
         enum CodingKeys: CodingKey {
             case id
-            case matId
+            case matID
             case propertiesID
             case node1
             case node2
@@ -612,57 +669,38 @@ class Frame2D: Elements, Identifiable {
         }
         
         required init(from decoder: Decoder) throws {
-            fatalError("init(from:) has not been implemented")
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.id = try container.decode(Int.self, forKey: .id)
+            self.matID = try container.decode(Int.self, forKey: .matID)
+            self.propertiesID = try container.decode(Int.self, forKey: .propertiesID)
+            self.node1 = try container.decode(Int.self, forKey: .node1)
+            self.node2 = try container.decode(Int.self, forKey: .node2)
+            self.area = try container.decode(Double.self, forKey: .area)
+            self.length = try container.decode(Double.self, forKey: .length)
+            self.youngsModulus = try container.decode(Double.self, forKey: .youngsModulus)
+            
+            super.init(numNodes: 2, numDOF: 3, eltype: "Truss3D")
         }
-        
+        override func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(id, forKey: .id)
+            try container.encode(matID, forKey: .matID)
+            try container.encode(propertiesID, forKey: .propertiesID)
+            try container.encode(node1, forKey: .node1)
+            try container.encode(node2, forKey: .node2)
+            try container.encode(area, forKey: .area)
+            try container.encode(length, forKey: .length)
+            try container.encode(youngsModulus, forKey: .youngsModulus)
+        }
       
         
         func elStiffMatrix(node1: Node, node2: Node, youngsM: Double, crossArea: Double, len: Double)->[[Double]] {
             
-    //        var elstiff = [[Double]]()
-    //        let zeros = simd_double4(0.0 , 0.0, 0.0 , 0.0)
-            
-    //        var elstiff = simd_double4x4(columns: (zeros, zeros, zeros, zeros) )
-    //
-    //        var rotationMatrix = simd_double4x4(columns: (zeros, zeros, zeros, zeros) )
-    //
-    //        var stiff = simd_double4x4(columns: (zeros, zeros, zeros, zeros) )
-    //
-    //        var rTK = simd_double4x4(columns: (zeros, zeros, zeros, zeros) ) // rotationTranspose * elstiffness
-            
-//            let rTranspose : [[Double]]
-//
-//            let rTransposeK : [[Double]]
-            
-//            var elstiff = Array(repeating: Array(repeating: 0.0, count: 6), count: 6)
-            
-//            var rotationMatrix = Array(repeating: Array(repeating: 0.0, count: 6), count: 6)
+
 
             var stiff = Array(repeating: Array(repeating: 0.0, count: 6), count: 6)
             
      
-            
-            
-//            // Form Rotation Matrix
-//
-//            let thetaX = angleOfRotation(node1: node1, node2: node2, axis: "x")
-//            let thetaY = angleOfRotation(node1: node1, node2: node2, axis: "y")
-//            let thetaZ = angleOfRotation(node1: node1, node2: node2, axis: "z")
-            
-    //        print("in truss2d elStiffMatrix")
-    //        print("theta \(theta) \(theta * 180.0 / Double.pi)")
-            
-//            rotationMatrix[0][0] = cos(theta)
-//            rotationMatrix[0][1] = sin(theta)
-//            rotationMatrix[1][0] = -sin(theta)
-//            rotationMatrix[1][1] = cos(theta)
-//            rotationMatrix[2][2] = cos(theta)
-//            rotationMatrix[2][3] = sin(theta)
-//            rotationMatrix[3][2] = -sin(theta)
-//            rotationMatrix[3][3] = cos(theta)
-
-    //        print("rotation matrix")
-    //        print(rotationMatrix)
             let x1 = node1.xcoord
             let x2 = node2.xcoord
             let y1 = node1.ycoord
@@ -718,11 +756,7 @@ class Frame2D: Elements, Identifiable {
             stiff[5][4] =  axialStiff * cy * cz
             stiff[5][5] =  axialStiff * cz * cz
                 
-    //        rTK = rotationMatrix.transpose * elstiff
-    //        stiff = rTK * rotationMatrix
-//            rTranspose = transpose(rotationMatrix)
-//            rTransposeK = multiply(rTranspose, elstiff)
-//            stiff = multiply(rTransposeK, rotationMatrix)
+
             
 
             
@@ -762,7 +796,7 @@ class Frame2D: Elements, Identifiable {
             // Inherting:elPropertyStore,materialStore,nodesStore
             enum CodingKeys: CodingKey {
                 case id
-                case matId
+                case matID
                 case propertiesID
                 case node1
                 case node2
@@ -816,18 +850,40 @@ class Frame2D: Elements, Identifiable {
                 
                 super.init(numNodes: 2, numDOF: 6, eltype: "Frame3D")
 
-
-                
-        //        elementStiffness = elStiffMatrix(youngsM: youngsMod, crossArea: area , len: length)
-                
-                
-                
             }
             
             required init(from decoder: Decoder) throws {
-                fatalError("init(from:) has not been implemented")
+                print("Decoding Frame3D")
+                
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.id = try container.decode(Int.self, forKey: .id)
+                self.matID = try container.decode(Int.self, forKey: .matID)
+                self.propertiesID = try container.decode(Int.self, forKey: .propertiesID)
+                self.node1 = try container.decode(Int.self, forKey: .node1)
+                self.node2 = try container.decode(Int.self, forKey: .node2)
+                self.area = try container.decode(Double.self, forKey: .area)
+                self.length = try container.decode(Double.self, forKey: .length)
+                self.youngsModulus = try container.decode(Double.self, forKey: .youngsModulus)
+                self.pin1 = try container.decode(Bool.self, forKey: .pin1)
+                self.pin2 = try container.decode(Bool.self, forKey: .pin2)
+                
+                super.init(numNodes: 2, numDOF: 6, eltype: "Frame3D")
+
             }
             
+            override func encode(to encoder: Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                try container.encode(id, forKey: .id)
+                try container.encode(matID, forKey: .matID)
+                try container.encode(propertiesID, forKey: .propertiesID)
+                try container.encode(node1, forKey: .node1)
+                try container.encode(node2, forKey: .node2)
+                try container.encode(area, forKey: .area)
+                try container.encode(length, forKey: .length)
+                try container.encode(youngsModulus, forKey: .youngsModulus)
+                try container.encode(pin1, forKey: .pin1)
+                try container.encode(pin2, forKey: .pin2)
+            }
           
             
             func elStiffMatrix(node1: Node, node2: Node, youngsM: Double, G: Double, crossArea: Double, len: Double, izz: Double, iyy: Double, ixx: Double)->[[Double]] {

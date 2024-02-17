@@ -10,19 +10,28 @@ import SwiftUI
 import Combine
 
 @Observable
-class LoadStore: Encodable {
+class LoadStore: Encodable, Decodable {
 
        var loads: [Load] = []
-//       var numLoads: Int
-//       var loadNodeText: String = ""
-//       var loadDirectionText: String = ""    
-//       var loadValueText: String = ""
-    
+
+    private enum CodingKeys: CodingKey {
+        case loads
+    }
     
     init() {
         
 //        numLoads = 0
         print("Initializing loadStore")
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.loads = try container.decode([Load].self, forKey: .loads)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(loads, forKey: .loads)
     }
     
     func addLoad(load: Load) {

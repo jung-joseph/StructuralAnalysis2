@@ -12,6 +12,7 @@ struct ElPropertyList: View {
     
 
     @Bindable var elPropertyStore : ElPropertyStore
+    @State var isEditing: Bool = true
     @Environment(\.presentationMode) private var presentationMode
 
     
@@ -25,7 +26,7 @@ struct ElPropertyList: View {
                                     
                                 
                     ForEach(elPropertyStore.elProperties) {elProperty in
-                        NavigationLink(destination: ElPropertyView(elProperty: elProperty, elPropertyStore: self.elPropertyStore)){
+                        NavigationLink(destination: ElPropertyView(elProperty: elProperty, elPropertyStore: self.elPropertyStore, isEditing: $isEditing)){
                             ElPropertyRow(elProperty: elProperty)
                         }
                     }.onDelete(perform: delete)
@@ -33,12 +34,12 @@ struct ElPropertyList: View {
                 .navigationBarItems(
                 
                     leading: Button("+") {
-                        let newElProp = ElProperty(id: self.elPropertyStore.numElProperties)
-                        self.elPropertyStore.areaText = "0"
-                        self.elPropertyStore.ixxText = "0"
-                        self.elPropertyStore.iyyText = "0"
-                        self.elPropertyStore.ixyText = "0"
-                        self.elPropertyStore.ijText = "0"
+                        let newElProp = ElProperty(id: self.elPropertyStore.elProperties.count)
+//                        self.elPropertyStore.areaText = "0"
+//                        self.elPropertyStore.ixxText = "0"
+//                        self.elPropertyStore.iyyText = "0"
+//                        self.elPropertyStore.ixyText = "0"
+//                        self.elPropertyStore.ijText = "0"
                         self.elPropertyStore.addElProperty(elProperty: newElProp)
                     }
                     .padding()
@@ -68,7 +69,7 @@ struct ElPropertyList: View {
             elPropertyStore.elProperties.remove(at: first)
         }
         
-        elPropertyStore.numElProperties -= 1
+//        elPropertyStore.numElProperties -= 1
        
         
         for index in 0...elPropertyStore.elProperties.count - 1{

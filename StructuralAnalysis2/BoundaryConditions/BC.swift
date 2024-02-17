@@ -9,9 +9,16 @@
 import Foundation
 import SwiftUI
 
-struct BC: Codable, Identifiable {
+struct BC: Decodable, Encodable, Identifiable {
     var id: Int
     var bcNode: Int
     var bcDirection: Int
     var bcValue: Double
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case bcNode
+        case bcDirection
+        case bcValue
+    }
 }

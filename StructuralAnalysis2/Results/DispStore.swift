@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 @Observable
-class DispStore: Encodable{
+class DispStore: Encodable,Decodable{
     
     var displacements : [NodalDisp]?
 
@@ -18,10 +18,19 @@ class DispStore: Encodable{
         print("Initializing DispStore")
     }
     
-//     enum CodingKeys: CodingKey {
-//        case displacments
-//    }
+     enum CodingKeys: CodingKey {
+        case displacments
+    }
     
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.displacements = try container.decode([NodalDisp].self, forKey: .displacments)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(displacements, forKey: .displacments)
+    }
     func fillDispStore (x: [Double], nodesStore: NodesStore, truss2DStore: Truss2DStore, frame2DStore: Frame2DStore, truss3DStore: Truss3DStore, frame3DStore: Frame3DStore) {
         
 

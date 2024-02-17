@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 @Observable
-class Frame3DStore: Encodable{
+class Frame3DStore: Encodable, Decodable{
     
     var frame3DElements: [Frame3D] = []
 //    var numFrame3DElements: Int = 0
@@ -22,7 +22,19 @@ class Frame3DStore: Encodable{
     init() {
         print("Initializing Frame3DStore")
     }
+    private enum CodingKeys: CodingKey {
+        case frame3DElements
+    }
     
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.frame3DElements = try container.decode([Frame3D].self, forKey: .frame3DElements)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(frame3DElements, forKey: .frame3DElements)
+    }
     func addFrame3DEl(element: Frame3D){
         frame3DElements.append(element)
 //        self.numFrame3DElements += 1

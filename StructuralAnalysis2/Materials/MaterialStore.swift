@@ -10,17 +10,15 @@ import Combine
 import SwiftUI
 
 @Observable
-class MaterialStore: Encodable {
+class MaterialStore: Encodable,Decodable {
     
 
     
     var materials: [Material]
     
-//    var numMaterials : Int = 0
-//
-//    var textYM : String = ""
-//    
-//    var textGM : String = ""
+    private enum CodingKeys: CodingKey {
+        case materials
+    }
    
     
     init() {
@@ -37,6 +35,17 @@ class MaterialStore: Encodable {
         //
         self.printMaterials()
         //
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.materials = try container.decode([Material].self, forKey: .materials)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(materials, forKey: .materials)
+
     }
     
     func addMaterial(material: Material) {

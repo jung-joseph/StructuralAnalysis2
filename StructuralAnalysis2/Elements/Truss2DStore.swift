@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 @Observable
-class Truss2DStore: Encodable, Equatable{
+class Truss2DStore: Encodable, Decodable, Equatable{
     static func == (lhs: Truss2DStore, rhs: Truss2DStore) -> Bool {
         return lhs.truss2DElements.count == rhs.truss2DElements.count
 
@@ -18,15 +18,25 @@ class Truss2DStore: Encodable, Equatable{
     
     
     var truss2DElements: [Truss2D] = []
-//    var numTruss2DElements: Int = 0
-//    var matID : Int = 0
-//    var propertyID : Int = 0
-//    var node1Text : String = ""
-//    var node2Text : String = ""
+
+    private enum CodingKeys: CodingKey {
+        case truss2DElements
+    }
 
 
     init() {
         print("Initializing Truss2DStore")
+    }
+    
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.truss2DElements = try container.decode([Truss2D].self, forKey: .truss2DElements)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(truss2DElements, forKey: .truss2DElements)
     }
     
     func addTruss2DEl(element: Truss2D){

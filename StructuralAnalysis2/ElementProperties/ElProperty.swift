@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-struct ElProperty: Codable, Identifiable {
+struct ElProperty: Decodable, Encodable, Identifiable {
     
     enum CodingKeys: CodingKey {
         case id
