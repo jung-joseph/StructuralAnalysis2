@@ -23,7 +23,7 @@ struct BCList: View {
     @Environment(\.presentationMode) private var presentationMode
     
     @State var showBCView: Bool = false
-    @State var isEditing: Bool = true
+//    @State var isEditing: Bool = true
     
     var body: some View {
         
@@ -34,7 +34,7 @@ struct BCList: View {
                 List {
                     
                     ForEach(bcStore.bcs) {bc in
-                        NavigationLink(destination: BCView(scene: $scene, bc: bc, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore,isEditing: $isEditing)) {
+                        NavigationLink(destination: BCView(scene: $scene, bc: bc, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore)) {
                             BCRow(bc: bc)
                         }
                     }.onDelete(perform: delete)
@@ -42,8 +42,12 @@ struct BCList: View {
                     .navigationBarItems(
                     
                     leading: Button("+") {
-                        showBCView.toggle()
-                        isEditing = false
+                        let newBC = BC(id: self.bcStore.bcs.count,bcNode: 0, bcDirection: 0, bcValue: 0)
+                        self.bcStore.addBC(bc: newBC)
+
+//                        showBCView.toggle()
+                        
+//                        isEditing = false
 //                        let newBC = BC(id:self.bcStore.numBCs,bcNode: 0, bcDirection: 0, bcValue: 0)
 //                        self.bcStore.bcNodeText = "0"
 //                        self.bcStore.bcDirectionText = "X"
@@ -67,7 +71,7 @@ struct BCList: View {
             .sheet(isPresented: $showBCView){
                 let newBc = BC(id: bcStore.bcs.count, bcNode: 0, bcDirection: 0, bcValue: 0.0)
                 
-                BCView(scene: $scene, bc: newBc, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, isEditing: $isEditing)
+                BCView(scene: $scene, bc: newBc, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore)
             }
             
         } // NavigationView
@@ -80,12 +84,13 @@ struct BCList: View {
             bcStore.bcs.remove(at: first)
         }
         
-//        bcStore.numBCs -= 1
-       
+        //        bcStore.numBCs -= 1
         
+        if bcStore.bcs.count > 0{
         for index in 0...bcStore.bcs.count - 1{
             bcStore.bcs[index].id = index
         }
+    }
         
         scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
 

@@ -23,7 +23,8 @@ struct NodeList : View {
     @Environment(\.presentationMode) private var presentationMode
 
     @State var showNodeView: Bool = false
-    @State var isEditing: Bool = true
+    
+//    @State var isEditing: Bool = true
     
     var body: some View {
         
@@ -35,7 +36,7 @@ struct NodeList : View {
                 List {
                     
                     ForEach(nodesStore.nodes) {node in
-                        NavigationLink(destination: NodeView(scene: $scene, node: node, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, isEditing: $isEditing))
+                        NavigationLink(destination: NodeView(scene: $scene, node: node, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore))
                         {
                             NodeRow(node: node)
                         }
@@ -43,8 +44,10 @@ struct NodeList : View {
                 }// List
                 .navigationBarItems(
                         leading: Button("+") {
-                            showNodeView.toggle()
-                            isEditing = false
+//                            showNodeView.toggle()
+                            let newNode = Node(id: self.nodesStore.nodes.count, xcoord: 0, ycoord: 0, zcoord: 0)
+                            self.nodesStore.addNode(node: newNode)
+
                             /*
                         let newNode = Node(id: self.nodesStore.numNodes, xcoord: 0, ycoord: 0, zcoord: 0)
                         self.nodesStore.tempText1 = "0"
@@ -56,7 +59,8 @@ struct NodeList : View {
                     .padding()
                     .foregroundColor(Color.blue)
                     .font(.title)
-                    ,trailing: EditButton())
+//                    ,trailing: EditButton()
+                )
                     
                     .navigationBarTitle("Nodes").font(.largeTitle)
                 
@@ -69,7 +73,7 @@ struct NodeList : View {
             
                 let newNode = Node(id: nodesStore.nodes.count)
                 
-                NodeView(scene: $scene, node: newNode, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, isEditing: $isEditing)
+                NodeView(scene: $scene, node: newNode, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore)
             }
   
                 
@@ -87,10 +91,12 @@ struct NodeList : View {
         
 //        nodesStore.numNodes -= 1
        
-        
-        for index in 0...nodesStore.nodes.count - 1{
-            nodesStore.nodes[index].id = index
+        if nodesStore.nodes.count > 0{
+            for index in 0...nodesStore.nodes.count - 1{
+                nodesStore.nodes[index].id = index
+            }
         }
+        
         scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
 
     }

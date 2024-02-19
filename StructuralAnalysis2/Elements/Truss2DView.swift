@@ -23,7 +23,6 @@ struct Truss2DView: View {
     @Bindable var materialStore: MaterialStore
     @Bindable var elPropertyStore: ElPropertyStore
     
-    @Binding var isEditing: Bool
     
     @Environment(\.presentationMode) private var showDetail
 
@@ -60,53 +59,29 @@ struct Truss2DView: View {
             HStack {
                 Spacer()
                 Button (action: {
-
-                    
-                    //MARK: - Add new element
-                    if !isEditing{
-                        if localMatID == nil {
-                            localMatID = 0
-                        }
-                        if localPropID == nil {
-                            localPropID = 0
-                        }
-                        if localNode1 == nil {
-                            localNode1 = 0
-                        }
-                        if localNode2 == nil {
-                            localNode2 = 0
-                        }
-                        let newTruss2D = Truss2D(id: self.truss2d.id, matID: localMatID!, propertiesID: localPropID!, node1: localNode1!, node2: localNode2!, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, truss2DStore: self.truss2DStore)
-                        
-                        //                     self.truss2DStore.changeTruss2D(element: newTruss2D)
-                        self.truss2DStore.addTruss2DEl(element: newTruss2D)
-                        // MARK: -                           ReDraw entire model
-                        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
-                        isEditing.toggle()
-                    } else {
-                        // MARK: - Make changes to existing node
-//                        print("truss Id: \(truss2d.id)")
-                        if localMatID == nil {
-                            localMatID = truss2d.matID
-                        }
-                        if localPropID == nil {
-                            localPropID = truss2d.propertiesID
-                        }
-                        if localNode1 == nil {
-                            localNode1 = truss2d.node1
-                        }
-                        if localNode2 == nil {
-                            localNode2 = truss2d.node2
-                        }
-
+                    if localMatID != nil {
                         truss2DStore.truss2DElements[truss2d.id].matID = localMatID!
-                        truss2DStore.truss2DElements[truss2d.id].propertiesID = localPropID!
-                        truss2DStore.truss2DElements[truss2d.id].node1 = localNode1!
-                        truss2DStore.truss2DElements[truss2d.id].node2 = localNode2!
-                        // MARK: -                           ReDraw entire model
-
-                        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
                     }
+                    if localPropID != nil {
+                        truss2DStore.truss2DElements[truss2d.propertiesID].matID = localPropID!
+
+                    }
+                    if localNode1 != nil {
+                        truss2DStore.truss2DElements[truss2d.id].node1 = localNode1!
+
+                    }
+                    if localNode2 != nil {
+                        truss2DStore.truss2DElements[truss2d.id].node2 = localNode2!
+
+                    }
+                    
+                    // MARK: -                           ReDraw entire model
+                    
+                    scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                
+                    
+                    
+
 //                    self.truss2DStore.printConnectivity()
                     
                     self.showDetail.wrappedValue.dismiss()

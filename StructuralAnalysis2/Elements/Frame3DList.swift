@@ -26,7 +26,6 @@ struct Frame3DList: View {
     @Environment(\.presentationMode) private var presentationMode
 
     @State var showFrame3DView: Bool = false
-    @State var isEditing:Bool = true
     @State var node1IsOn:Bool = false
     @State var node2IsOn:Bool = false
     
@@ -41,7 +40,7 @@ struct Frame3DList: View {
                 List {
                     
                     ForEach(frame3DStore.frame3DElements) {frame3D in
-                        NavigationLink(destination: Frame3DView(scene: $scene, frame3d: frame3D, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: self.frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore,bcStore: bcStore, loadStore: loadStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, isEditing: $isEditing, node1IsOn: $node1IsOn, node2IsOn: $node2IsOn)) {
+                        NavigationLink(destination: Frame3DView(scene: $scene, frame3d: frame3D, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: self.frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore,bcStore: bcStore, loadStore: loadStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, node1IsOn: $node1IsOn, node2IsOn: $node2IsOn)) {
                             Frame3DElementRow(frame3DEl: frame3D)
 
                         }
@@ -50,8 +49,9 @@ struct Frame3DList: View {
                 .navigationBarItems(
                 
                 leading: Button("+") {
-                    showFrame3DView.toggle()
-                    isEditing = false
+//                    showFrame3DView.toggle()
+                    let newFrame3d = Frame3D(id: self.frame3DStore.frame3DElements.count, matID: 0, propertiesID: 0, node1: 0, node2: 0,pin1: false, pin2: false, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, frame3DStore: frame3DStore)
+                    self.frame3DStore.addFrame3DEl(element: newFrame3d)
                     /*
                     let newFrame3d = Frame3D(id: self.frame3DStore.numFrame3DElements, matID: 0, propertiesID: 0, node1: 0, node2: 0,pin1: false, pin2: false, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, frame3DStore: Frame3DStore())
                     self.frame3DStore.node1Text = "0"
@@ -74,7 +74,7 @@ struct Frame3DList: View {
             .sheet(isPresented: $showFrame3DView) {
                 let newFrame3D = Frame3D(id: self.frame3DStore.frame3DElements.count, matID: 0, propertiesID: 0, node1: 0, node2: 0, pin1: false, pin2: false, nodesStore: nodesStore, materialStore: materialStore, elPropertyStore: elPropertyStore, frame3DStore: frame3DStore)
                 
-                Frame3DView(scene: $scene, frame3d: newFrame3D, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore, isEditing: $isEditing, node1IsOn: $node1IsOn, node2IsOn: $node2IsOn)
+                Frame3DView(scene: $scene, frame3d: newFrame3D, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore,  node1IsOn: $node1IsOn, node2IsOn: $node2IsOn)
             }
         } // Nav View
     }// View

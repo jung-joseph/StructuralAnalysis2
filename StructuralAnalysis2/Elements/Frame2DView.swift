@@ -23,7 +23,7 @@ struct Frame2DView: View {
     @Bindable var materialStore: MaterialStore
     @Bindable var elPropertyStore: ElPropertyStore
     
-    @Binding var isEditing: Bool
+//    @Binding var isEditing: Bool
     @Binding var node1IsOn:Bool
     @Binding var node2IsOn:Bool
     
@@ -81,82 +81,27 @@ struct Frame2DView: View {
             HStack {
                 Spacer()
                 Button (action: {
-                    //MARK: - Add new element
-                    if !isEditing{
-                        if localMatID == nil {
-                            localMatID = 0
-                        }
-                        if localPropID == nil {
-                            localPropID = 0
-                        }
-                        if localNode1 == nil {
-                            localNode1 = 0
-                        }
-                        if localNode2 == nil {
-                            localNode2 = 0
-                        }
-                        let newFrame2D = Frame2D(id: self.frame2d.id, matID: localMatID!, propertiesID: localPropID!, node1: localNode1!, node2: localNode2!, pin1: node1IsOn, pin2: node2IsOn, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, frame2DStore: self.frame2DStore)
-                        
-                        //                     self.truss2DStore.changeTruss2D(element: newTruss2D)
-                        self.frame2DStore.addFrame2DEl(element: newFrame2D)
-                        // MARK: -                           ReDraw entire model
-                        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
-                        isEditing.toggle()
-                    } else {
-                        // MARK: - Make changes to existing node
-                        //                        print("truss Id: \(truss2d.id)")
-                        if localMatID == nil {
-                            localMatID = frame2d.matID
-                        }
-                        if localPropID == nil {
-                            localPropID = frame2d.propertiesID
-                        }
-                        if localNode1 == nil {
-                            localNode1 = frame2d.node1
-                        }
-                        if localNode2 == nil {
-                            localNode2 = frame2d.node2
-                        }
-                        /*
-                         var matIDtemp = Int(self.frame2DStore.matIDText)
-                         if  matIDtemp == nil {
-                         matIDtemp = self.frame2d.matID
-                         }
-                         self.frame2DStore.matIDText = ""
-                         
-                         var proptemp = Int(self.frame2DStore.propertyIDText)
-                         if  proptemp == nil {
-                         proptemp = self.frame2d.propertiesID
-                         }
-                         self.frame2DStore.propertyIDText = ""
-                         
-                         var node1temp = Int(self.frame2DStore.node1Text)
-                         if  node1temp == nil {
-                         node1temp = self.frame2d.node1
-                         }
-                         self.frame2DStore.node1Text = ""
-                         
-                         var node2temp = Int(self.frame2DStore.node2Text)
-                         if  node2temp == nil {
-                         node2temp = self.frame2d.node2
-                         }
-                         self.frame2DStore.node2Text = ""
-                         
-                         //                        print(" In Frame2DView ")
-                         //                        print("node1IsOn \(self.node1IsOn) node2IsOn \(self.node2IsOn) ")
-                         
-                         let newFrame2D = Frame2D(id: self.frame2d.id, matID: matIDtemp!, propertiesID: proptemp!, node1: node1temp!, node2: node2temp!, pin1: self.node1IsOn, pin2: self.node2IsOn, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, frame2DStore: self.frame2DStore)
-                         self.frame2DStore.changeFrame2D(element: newFrame2D)
-                         self.frame2DStore.printConnectivity()
-                         */
+                    
+                    if localMatID != nil {
                         frame2DStore.frame2DElements[frame2d.id].matID = localMatID!
-                        frame2DStore.frame2DElements[frame2d.id].propertiesID = localPropID!
+                    }
+                    if localPropID != nil {
+                        frame2DStore.frame2DElements[frame2d.propertiesID].matID = localPropID!
+
+                    }
+                    if localNode1 != nil {
                         frame2DStore.frame2DElements[frame2d.id].node1 = localNode1!
+
+                    }
+                    if localNode2 != nil {
                         frame2DStore.frame2DElements[frame2d.id].node2 = localNode2!
+
+                    }
+
                         // MARK: -                           ReDraw entire model
                         
                         scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
-                    }
+                    
                     self.showDetail.wrappedValue.dismiss()
 
                      

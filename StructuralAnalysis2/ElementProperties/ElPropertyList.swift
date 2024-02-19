@@ -12,7 +12,7 @@ struct ElPropertyList: View {
     
 
     @Bindable var elPropertyStore : ElPropertyStore
-    @State var isEditing: Bool = true
+//    @State var isEditing: Bool = true
     @Environment(\.presentationMode) private var presentationMode
 
     
@@ -26,7 +26,7 @@ struct ElPropertyList: View {
                                     
                                 
                     ForEach(elPropertyStore.elProperties) {elProperty in
-                        NavigationLink(destination: ElPropertyView(elProperty: elProperty, elPropertyStore: self.elPropertyStore, isEditing: $isEditing)){
+                        NavigationLink(destination: ElPropertyView(elProperty: elProperty, elPropertyStore: self.elPropertyStore)){
                             ElPropertyRow(elProperty: elProperty)
                         }
                     }.onDelete(perform: delete)
@@ -35,18 +35,14 @@ struct ElPropertyList: View {
                 
                     leading: Button("+") {
                         let newElProp = ElProperty(id: self.elPropertyStore.elProperties.count)
-//                        self.elPropertyStore.areaText = "0"
-//                        self.elPropertyStore.ixxText = "0"
-//                        self.elPropertyStore.iyyText = "0"
-//                        self.elPropertyStore.ixyText = "0"
-//                        self.elPropertyStore.ijText = "0"
                         self.elPropertyStore.addElProperty(elProperty: newElProp)
                     }
                     .padding()
                     .foregroundColor(Color.blue)
                     .font(.title)
                     
-                    ,trailing: EditButton())
+//                    ,trailing: EditButton()
+                )
                 
                     .navigationBarTitle("Element Properties").font(.largeTitle)
                 
@@ -71,9 +67,10 @@ struct ElPropertyList: View {
         
 //        elPropertyStore.numElProperties -= 1
        
-        
-        for index in 0...elPropertyStore.elProperties.count - 1{
-            elPropertyStore.elProperties[index].id = index
+        if elPropertyStore.elProperties.count > 0 {
+            for index in 0...elPropertyStore.elProperties.count - 1{
+                elPropertyStore.elProperties[index].id = index
+            }
         }
     }
 }

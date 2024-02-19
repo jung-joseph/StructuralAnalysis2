@@ -23,7 +23,6 @@ struct LoadList: View {
     @Environment(\.presentationMode) private var presentationMode
     
     @State var showLoadsView: Bool = false
-    @State var isEditing: Bool = true
     
     var body: some View {
         
@@ -34,7 +33,7 @@ struct LoadList: View {
                 List {
                     
                     ForEach(loadStore.loads) {load in
-                        NavigationLink(destination: LoadView(scene: $scene, load: load, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore,isEditing: $isEditing)) {
+                        NavigationLink(destination: LoadView(scene: $scene, load: load, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore)) {
                             LoadRow(load: load)
                         }
                     }.onDelete(perform: delete)
@@ -42,20 +41,17 @@ struct LoadList: View {
                     .navigationBarItems(
                     
                     leading: Button("+") {
-                        showLoadsView.toggle()
-                        isEditing = false
                         
-//                        let newLoad = Load(id:self.loadStore.numLoads,loadNode: 0, loadDirection: 0, loadValue: 0)
-//                        self.loadStore.loadNodeText = "0"
-//                        self.loadStore.loadDirectionText = "0"
-//                        self.loadStore.loadValueText = "0"
-//                        self.loadStore.addLoad(load: newLoad)
+                        let newLoad = Load(id:loadStore.loads.count,loadNode: 0, loadDirection: 0, loadValue: 0.0)
+                        self.loadStore.addLoad(load: newLoad)
+                        
+
                     }
                     .padding()
                     .foregroundColor(Color.blue)
                     .font(.title)
                     
-                    ,trailing: EditButton())
+                    )
                     
                     .navigationBarTitle("Loads").font(.largeTitle)
 
@@ -65,10 +61,10 @@ struct LoadList: View {
                 
                 
             } //VStack
-            .sheet(isPresented: $showLoadsView){
-                let newLoad = Load(id:loadStore.loads.count,loadNode: 0, loadDirection: 0, loadValue: 0.0)
-                LoadView(scene: $scene, load: newLoad, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, isEditing: $isEditing)
-            }
+//            .sheet(isPresented: $showLoadsView){
+//                let newLoad = Load(id:loadStore.loads.count,loadNode: 0, loadDirection: 0, loadValue: 0.0)
+//                LoadView(scene: $scene, load: newLoad, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, isEditing: $isEditing)
+//            }
             
         } // NavigationView
     } // body
@@ -82,11 +78,12 @@ struct LoadList: View {
             loadStore.loads.remove(at: first)
         }
         
-//        loadStore.numLoads -= 1
-       
+        //        loadStore.numLoads -= 1
         
-        for index in 0...loadStore.loads.count - 1{
-            loadStore.loads[index].id = index
+        if loadStore.loads.count > 0{
+            for index in 0...loadStore.loads.count - 1{
+                loadStore.loads[index].id = index
+            }
         }
     }
     

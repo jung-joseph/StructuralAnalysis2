@@ -26,7 +26,6 @@ struct Truss2DList: View {
     @Environment(\.presentationMode) private var presentationMode
 
     @State var showTruss2DView: Bool = false
-    @State var isEditing:Bool = true
     
     var body: some View {
         
@@ -37,7 +36,7 @@ struct Truss2DList: View {
 
                     ForEach(truss2DStore.truss2DElements) {truss2D in
                         
-                        NavigationLink(destination: Truss2DView(scene: $scene, truss2d: truss2D, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore, isEditing: $isEditing))
+                        NavigationLink(destination: Truss2DView(scene: $scene, truss2d: truss2D, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore))
                         {
                             Truss2DElementRow(truss2DEl: truss2D)
                         }
@@ -51,15 +50,17 @@ struct Truss2DList: View {
                 .navigationBarItems(
                 
                 leading: Button("+") {
-                    showTruss2DView.toggle()
-                    isEditing = false
+                    let newTruss2d = Truss2D(id: self.truss2DStore.truss2DElements.count, matID: 0, propertiesID: 0, node1: 0, node2: 0, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, truss2DStore: truss2DStore)
+                    self.truss2DStore.addTruss2DEl(element: newTruss2d)
+//                    showTruss2DView.toggle()
+//                    isEditing = false
 
                 }
                 .padding()
                 .foregroundColor(Color.blue)
                 .font(.title)
                 
-                ,trailing: EditButton())
+                )
                 .navigationBarTitle("Truss 2D Elements").font(.largeTitle)
 
 
@@ -71,7 +72,7 @@ struct Truss2DList: View {
             .sheet(isPresented: $showTruss2DView) {
                 let newTruss2d = Truss2D(id: self.truss2DStore.truss2DElements.count, matID: 0, propertiesID: 0, node1: 0, node2: 0, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, truss2DStore: truss2DStore)
                 
-                Truss2DView(scene: $scene,  truss2d: newTruss2d, nodesStore: nodesStore, truss2DStore: truss2DStore,frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore, isEditing: $isEditing)
+                Truss2DView(scene: $scene,  truss2d: newTruss2d, nodesStore: nodesStore, truss2DStore: truss2DStore,frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore)
                 
                 
             }

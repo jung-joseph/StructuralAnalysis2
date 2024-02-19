@@ -15,21 +15,20 @@ struct ElPropertyRow: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack{
-                Text("#: \(elProperty.id)").font(.custom("Arial", size: 20))
+                Text("#: \(elProperty.id)")
                 Spacer()
                 Text("Area:  " + String(format: "%.2f",self.elProperty.area)).font(.custom("Arial", size: 20))
                 Spacer()
-            }
-            HStack {
+           
                 Text("IZZ:   " + String(format: "%.2f",self.elProperty.iZZ) ).font(.custom("Arial", size: 20))
                 Spacer()
                 Text("IYY:   " + String(format: "%.2f",self.elProperty.iYY) ).font(.custom("Arial", size: 20))
                 Spacer()
                 Text("IXY:   " + String(format: "%.2f",self.elProperty.iXY) ).font(.custom("Arial", size: 20))
                 Spacer()
-                Text("J:      " + String(format: "%.2f", self.elProperty.iJ) ).font(.custom("Arial", size: 20))
+                Text("IJ:      " + String(format: "%.2f", self.elProperty.iJ) ).font(.custom("Arial", size: 20))
                 Spacer()
-            }
+            }.font(.custom("Arial", size: 18))
 
             
         }

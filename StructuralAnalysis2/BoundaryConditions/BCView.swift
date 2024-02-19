@@ -21,7 +21,7 @@ struct BCView: View {
     @Bindable var bcStore: BCStore
     @Bindable var loadStore: LoadStore
     
-    @Binding var isEditing: Bool
+//    @Binding var isEditing: Bool
     
     @Environment(\.presentationMode) private var showDetail
     
@@ -69,88 +69,23 @@ struct BCView: View {
                 Spacer()
                 Button (action:{
                     
-                    // MARK: - Add new bc
-                    if !isEditing {
-                        if localNode == nil {
-                            localNode = 0
-                        }
-//                        if localDirection == nil {
-                            localDirection = pickerDirection
-//                        }
-                        if localBCValue == nil {
-                            localBCValue = 0.0
-                        }
                     
-                    
-                    
-                    let newBC = BC(id:self.bc.id, bcNode: localNode!, bcDirection: localDirection!, bcValue: localBCValue!)
-                    self.bcStore.addBC(bc: newBC)
+                    if localNode != nil {
+                        bcStore.bcs[bc.id].bcNode = localNode!
+                    }
+                    if localDirection != nil {
+                        bcStore.bcs[bc.id].bcDirection = localDirection!
+                    }
+                    if localBCValue != nil {
+                        bcStore.bcs[bc.id].bcValue = localBCValue!
+
+                    }
+
+
                     // MARK: -                           ReDraw entire model
                     scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
-                    isEditing.toggle()
-                    /*
-                     var nodeTemp = Int(self.bcStore.bcNodeText)
-                     if  nodeTemp == nil {
-                     nodeTemp = self.bcStore.bcs[self.bc.id].bcNode
-                     }
-                     
-                     var bcDirectionTemp: Int
-                     if         self.bcStore.bcDirectionText == "X" {
-                     bcDirectionTemp = 0
-                     } else if (self.bcStore.bcDirectionText == "Y") {
-                     bcDirectionTemp = 1
-                     } else if (self.bcStore.bcDirectionText == "Z") {
-                     bcDirectionTemp = 2
-                     } else if (self.bcStore.bcDirectionText == "XX") {
-                     bcDirectionTemp = 3
-                     } else if (self.bcStore.bcDirectionText == "YY") {
-                     bcDirectionTemp = 4
-                     } else if (self.bcStore.bcDirectionText == "ZZ") {
-                     bcDirectionTemp = 5
-                     } else {
-                     bcDirectionTemp = 0
-                     }
-                     
-                     
-                     
-                     var bcValueTemp = Double(self.bcStore.bcValueText)
-                     if  bcValueTemp == nil {
-                     bcValueTemp = self.bcStore.bcs[self.bc.id].bcValue
-                     }
-                     self.bcStore.bcValueText = ""
-                     
-                     let newBC = BC(id:self.bc.id, bcNode: nodeTemp!, bcDirection: bcDirectionTemp, bcValue: bcValueTemp!)
-                     self.bcStore.changeBC(bc: newBC)
-                     self.bcStore.printBCs()
-                     */
-                } else {
-                    //MARK: - Make changes to exisiting BC
-                    if localNode == nil {
-                        localNode = bc.bcNode
-                    }
-                    if pickerDirection != bc.bcDirection {
-                        localDirection = pickerDirection
-                    } else {
-                        localDirection = bc.bcDirection
-                    }
-                    if localDirection != bc.bcDirection {
-                        localDirection = pickerDirection
-                    }
-                    if localBCValue == nil {
-                        localBCValue = bc.bcValue
-                    }
-                    
-                    bcStore.bcs[bc.id].bcNode = localNode!
-                    bcStore.bcs[bc.id].bcDirection = localDirection!
-                    bcStore.bcs[bc.id].bcValue = localBCValue!
-                    
-                    // MARK: -                           ReDraw entire model
-                    
-                    scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
-                    
-                }
-                    
-                    self.bcStore.printBCs()
+
+//                    self.bcStore.printBCs()
 
                     self.showDetail.wrappedValue.dismiss()
                     

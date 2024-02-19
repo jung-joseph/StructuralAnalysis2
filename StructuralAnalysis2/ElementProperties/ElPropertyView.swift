@@ -13,7 +13,7 @@ struct ElPropertyView: View {
     var elProperty: ElProperty
     @Bindable var elPropertyStore : ElPropertyStore
     
-    @Binding var isEditing: Bool
+//    @Binding var isEditing: Bool
     
     @Environment(\.presentationMode) private var showDetail
 
@@ -63,91 +63,31 @@ struct ElPropertyView: View {
           }
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .padding()
-            .font(.custom("Arial", size: 20))
+            .font(.custom("Arial", size: 18))
             
             HStack {
                 Spacer()
                  Button (action: {
                      
-                     if !isEditing {
-                         if localArea == nil {
-                             localArea = 0.0
-                         }
-                         if localIZZ == nil {
-                             localIZZ = 0.0
-                         }
-                         if localIYY == nil {
-                             localIYY = 0.0
-                         }
-                         if localIXY == nil {
-                             localIXY = 0.0
-                         }
-                         if localIJ == nil {
-                             localIJ = 0.0
-                         }
-                         let newElProperty = ElProperty(id: self.elProperty.id, area: localArea!, iZZ: localIZZ!, iYY: localIYY!, iXY: localIXY!, iJ: localIJ!)
-                         self.elPropertyStore.addElProperty(elProperty: newElProperty)
-                     } else {
-                         if localArea == nil {
-                             localArea = elProperty.area
-                         }
-                         if localIZZ == nil {
-                             localIZZ = elProperty.iZZ
-                         }
-                         if localIYY == nil {
-                             localIYY = elProperty.iYY
-                         }
-                         if localIXY == nil {
-                             localIXY = elProperty.iXY
-                         }
-                         if localIJ == nil {
-                             localIJ = elProperty.iJ
-                         }
+                     if localArea != nil {
                          elPropertyStore.elProperties[elProperty.id].area = localArea!
+                     }
+                     if localIZZ != nil {
                          elPropertyStore.elProperties[elProperty.id].iZZ = localIZZ!
+                     }
+                     if localIYY != nil {
                          elPropertyStore.elProperties[elProperty.id].iYY = localIYY!
+                     }
+                     if localIXY != nil {
                          elPropertyStore.elProperties[elProperty.id].iXY = localIXY!
+                     }
+                     if localIJ != nil {
                          elPropertyStore.elProperties[elProperty.id].iJ = localIJ!
-
-
                      }
                      
+
                      
-/*
-                     var areatemp = Double(self.elPropertyStore.areaText)
-                     if  areatemp == nil {
-                         areatemp = self.elPropertyStore.elProperties[self.elProperty.id].area
-                     }
-                     self.elPropertyStore.areaText = ""
-                    
-                     var izztemp = Double(self.elPropertyStore.ixxText)
-                     if  izztemp == nil {
-                         izztemp = self.elPropertyStore.elProperties[self.elProperty.id].iZZ
-                     }
-                     self.elPropertyStore.ixxText = ""
-                    
-                     var iyytemp = Double(self.elPropertyStore.iyyText)
-                     if  iyytemp == nil {
-                         iyytemp = self.elPropertyStore.elProperties[self.elProperty.id].iYY
-                     }
-                    self.elPropertyStore.iyyText = ""
-                    
-                    var ixytemp = Double(self.elPropertyStore.ixyText)
-                    if  ixytemp == nil {
-                        ixytemp = self.elPropertyStore.elProperties[self.elProperty.id].iXY
-                    }
-                    self.elPropertyStore.ixyText = ""
-                    
-                    var ijtemp = Double(self.elPropertyStore.ijText)
-                    if  ijtemp == nil {
-                        ijtemp = self.elPropertyStore.elProperties[self.elProperty.id].iJ
-                    }
-                    self.elPropertyStore.ijText = ""
-                
-                     let newElProperty = ElProperty(id: self.elProperty.id, area: areatemp!, iZZ: izztemp!, iYY: iyytemp!, iXY: ixytemp!, iJ: ijtemp!)
-                     self.elPropertyStore.changeProperties(elProperty: newElProperty)
-                     self.elPropertyStore.printElProperties()
- */
+
                     self.showDetail.wrappedValue.dismiss()
 
 

@@ -9,10 +9,11 @@
 import SwiftUI
 
 struct MaterialView : View {
+    
     var material: Material
     @Bindable var materialStore : MaterialStore
     
-    @Binding var isEditing:Bool
+//    @Binding var isEditing:Bool
     
     @Environment(\.presentationMode) private var showDetail
 
@@ -24,10 +25,12 @@ struct MaterialView : View {
             Text("MATERIAL DETAIL").font(.custom("Arial", size: 25))
             
             VStack(alignment: .leading) {
+                
                 Text("ID: \(material.id)").font(.custom("Arial", size: 20))
                 HStack {
                     Text("Young's Modulus:").font(.custom("Arial", size: 20))
                     TextField("\(material.youngsModulus)", value: $localYM, format: .number)
+                    Text("Shear Modulus:")
                     TextField("\(material.shearModulus)", value: $localGM, format: .number)
                 }.textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
                     
@@ -36,46 +39,24 @@ struct MaterialView : View {
                     
                     
                     Button (action: {
-                        if !isEditing {
-                            if localYM == nil {
-                                localYM = 0.0
-                            }
-                            if localGM == nil {
-                                localGM = 0.0
-                            }
-                            let newMat = Material(id: self.material.id, youngsModulus: localYM!, shearModulus: localGM!)
-                            self.materialStore.addMaterial(material: newMat)
-                        } else {
-                            if localYM == nil {
-                                localYM = material.youngsModulus
-                            }
-                            if localGM == nil {
-                                localGM = material.shearModulus
-                            }
+                        
+                        if localYM != nil {
                             materialStore.materials[material.id].youngsModulus = localYM!
-                            materialStore.materials[material.id].shearModulus = localGM!
-
                         }
-//                        var ymTemp = Double(self.materialStore.textYM)
-//                        if  ymTemp == nil {
-//                            ymTemp = self.materialStore.materials[self.material.id].youngsModulus
-//                        }
-//                        self.materialStore.textYM = ""
-//                        var gmTemp = Double(self.materialStore.textGM)
-//                        if  gmTemp == nil {
-//                            gmTemp = self.materialStore.materials[self.material.id].shearModulus
-//                        }
-//                        self.materialStore.textGM = ""
-//                        
-//                        let newMaterial = Material(id: self.material.id, youngsModulus: ymTemp!, shearModulus: gmTemp!)
-//                        self.materialStore.changeMaterials(material: newMaterial)
-//                        self.materialStore.printMaterials()
+                        if localGM != nil {
+                            materialStore.materials[material.id].shearModulus = localGM!
+                        }
+                            
+
                         
                         self.showDetail.wrappedValue.dismiss()
 
                       
                         
                     }) { Text ("Save Changes")}
+                        .background(.red)
+                        .clipShape(.capsule)
+                        
                     
                     Spacer()
                 }

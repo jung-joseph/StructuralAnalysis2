@@ -28,7 +28,6 @@ struct Truss3DList: View {
     @Environment(\.presentationMode) private var presentationMode
 
     @State var showTruss3DView: Bool = false
-    @State var isEditing:Bool = true
     
     
     var body: some View {
@@ -39,7 +38,7 @@ struct Truss3DList: View {
                 List {
 
                     ForEach(truss3DStore.truss3DElements) {truss3D in
-                        NavigationLink(destination: Truss3DView(scene: $scene, truss3d: truss3D, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore, isEditing: $isEditing)){
+                        NavigationLink(destination: Truss3DView(scene: $scene, truss3d: truss3D, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore)){
                             Truss3DElementRow(truss3DEl: truss3D)
                         }
                     }.onDelete(perform: delete)
@@ -48,8 +47,13 @@ struct Truss3DList: View {
                 .navigationBarItems(
                 
                 leading: Button("+") {
-                    showTruss3DView.toggle()
-                    isEditing = false
+                    let newTruss3d = Truss3D(id: self.truss3DStore.truss3DElements.count, matID: 0, propertiesID: 0, node1: 0, node2: 0, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, truss3DStore: truss3DStore)
+                    
+                    self.truss3DStore.addTruss3DEl(element: newTruss3d)
+
+                    
+                    
+                   
 
                 }
                 .padding()
@@ -66,11 +70,12 @@ struct Truss3DList: View {
                 
                 
             }
-            .sheet(isPresented: $showTruss3DView) {
-                let newTruss3d = Truss3D(id: self.truss3DStore.truss3DElements.count, matID: 0, propertiesID: 0, node1: 0, node2: 0, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, truss3DStore: truss3DStore)
-                
-                Truss3DView(scene: $scene,  truss3d: newTruss3d, nodesStore: nodesStore, truss2DStore: truss2DStore,frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore, isEditing: $isEditing)
-            }
+//            .sheet(isPresented: $showTruss3DView) {
+//                let newTruss3d = Truss3D(id: self.truss3DStore.truss3DElements.count, matID: 0, propertiesID: 0, node1: 0, node2: 0, nodesStore: self.nodesStore, materialStore: self.materialStore, elPropertyStore: self.elPropertyStore, truss3DStore: truss3DStore)
+//                
+//                Truss3DView(scene: $scene,  truss3d: newTruss3d, nodesStore: nodesStore, truss2DStore: truss2DStore,frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, materialStore: materialStore, elPropertyStore: elPropertyStore)
+//            }
+            
         } // Nav View
     }// View
     

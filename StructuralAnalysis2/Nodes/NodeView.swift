@@ -21,7 +21,7 @@ struct NodeView : View {
     @Bindable var bcStore: BCStore
     @Bindable var loadStore: LoadStore
     
-    @Binding var isEditing: Bool
+//    @Binding var isEditing: Bool
     
     @Environment(\.presentationMode) private var showDetail
 
@@ -55,52 +55,25 @@ struct NodeView : View {
 
                 }.font(.custom("Arial", size: 20))
                     .textFieldStyle(RoundedBorderTextFieldStyle()).padding()
+                
                 HStack{
                     Spacer()
                     
                     Button (action: {
                         
-
-                        // MARK: - Add new node
-                        if !isEditing{
-                            if localX == nil {
-                                localX = 0.0
-                            }
-                            if localY == nil {
-                                localY = 0.0
-                            }
-                            if localZ == nil {
-                                localZ = 0.0
-                            }
-                            let newNode = Node(id: self.node.id, xcoord: localX! , ycoord: localY! , zcoord: localZ! )
-                            self.nodesStore.addNode(node: newNode)
-// MARK: -                           ReDraw entire model
-                            scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
-                            isEditing.toggle()
-                        } else {
-                            // MARK: - Make changes to existing node
-                            
-                            if localX == nil {
-                                localX = node.xcoord
-                            }
-                            if localY == nil {
-                                localY = node.ycoord
-                            }
-                            if localZ == nil {
-                                localZ = node.ycoord
-                            }
-                            
+                        if localX != nil {
                             nodesStore.nodes[node.id].xcoord = localX!
-                            nodesStore.nodes[node.id].ycoord = localY!
-                            nodesStore.nodes[node.id].zcoord = localZ!
-                            
-// MARK: -                           ReDraw entire model
-
-                            scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
-                            
                         }
-                        
-//                        self.nodesStore.printNodes()
+                        if localY != nil {
+                            nodesStore.nodes[node.id].ycoord = localY!
+                        }
+                        if localZ != nil {
+                            nodesStore.nodes[node.id].zcoord = localZ!
+                        }
+                        // MARK: -                           ReDraw entire model
+                                                    scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                   
+
                         self.showDetail.wrappedValue.dismiss()
                         
                         

@@ -109,8 +109,10 @@ class DrawModel{
  
     func characteristicModelDimensions(nodesStore: NodesStore) -> [Double] {
         
-        var output: [Double] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        
+        var output: [Double] = [-0.5, 0.5, -0.5, 0.5, 0, 0, 0, 0, 0, 0]
+        if nodesStore.nodes.count == 0{
+            return output
+        }
         var minX : Double = nodesStore.nodes[0].xcoord
         var maxX : Double = nodesStore.nodes[0].xcoord
         var minY : Double = nodesStore.nodes[0].ycoord
@@ -246,39 +248,40 @@ class DrawModel{
     }
     
     
-       func viewNodes(nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene){
-            for i in 0...nodesStore.nodes.count-1 {
-               let newSphere = SCNSphere(radius: nodeRadius)
-               newSphere.firstMaterial?.diffuse.contents = self.nodeColor
-               let newSCNNode = SCNNode(geometry: newSphere)
-               newSCNNode.position = SCNVector3(nodesStore.nodes[i].xcoord,nodesStore.nodes[i].ycoord,nodesStore.nodes[i].zcoord)
-               scene.rootNode.addChildNode(newSCNNode)
-               
-               
-               if dispStore.displacements?.count != nil {
-                   let newDefSphere = SCNSphere(radius: nodeRadius)
-                   newDefSphere.firstMaterial?.diffuse.contents = self.defnodeColor
-                   let newDefSCNNode = SCNNode(geometry: newSphere)
+    func viewNodes(nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene){
+        if nodesStore.nodes.count >= 1{
+        for i in 0...nodesStore.nodes.count-1 {
+            let newSphere = SCNSphere(radius: nodeRadius)
+            newSphere.firstMaterial?.diffuse.contents = self.nodeColor
+            let newSCNNode = SCNNode(geometry: newSphere)
+            newSCNNode.position = SCNVector3(nodesStore.nodes[i].xcoord,nodesStore.nodes[i].ycoord,nodesStore.nodes[i].zcoord)
+            scene.rootNode.addChildNode(newSCNNode)
             
-                   newDefSCNNode.position =
-                    SCNVector3(nodesStore.nodes[i].xcoord + magFactor * dispStore.displacements![i].u[0],
-                               nodesStore.nodes[i].ycoord + magFactor * dispStore.displacements![i].u[1],
-                               nodesStore.nodes[i].zcoord + magFactor * dispStore.displacements![i].u[2])
+            
+            if dispStore.displacements?.count != nil {
+                let newDefSphere = SCNSphere(radius: nodeRadius)
+                newDefSphere.firstMaterial?.diffuse.contents = self.defnodeColor
+                let newDefSCNNode = SCNNode(geometry: newSphere)
                 
-//                print("x positions \(nodesStore.nodes[i].xcoord + magFactor * dispStore.displacements![i].u[0])")
+                newDefSCNNode.position =
+                SCNVector3(nodesStore.nodes[i].xcoord + magFactor * dispStore.displacements![i].u[0],
+                           nodesStore.nodes[i].ycoord + magFactor * dispStore.displacements![i].u[1],
+                           nodesStore.nodes[i].zcoord + magFactor * dispStore.displacements![i].u[2])
                 
-                   scene.rootNode.addChildNode(newDefSCNNode)
-
-               }
-           }
-    
-           
+                //                print("x positions \(nodesStore.nodes[i].xcoord + magFactor * dispStore.displacements![i].u[0])")
+                
+                scene.rootNode.addChildNode(newDefSCNNode)
+                
+            }
+        }
+        
+    }
        }
  
     func viewBCs(bcStore: BCStore, nodesStore: NodesStore, dims: [Double], scene:SCNScene){
         
         
-        if bcStore.bcs.count > 0 {
+        if bcStore.bcs.count > 0 && nodesStore.nodes.count > 0{
             for i in 0...bcStore.bcs.count - 1 {
                 
                 

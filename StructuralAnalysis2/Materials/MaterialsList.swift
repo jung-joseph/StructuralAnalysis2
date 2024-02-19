@@ -13,7 +13,7 @@ struct MaterialsList : View {
     
 //    @Binding var dismissFlag: Bool
     @Bindable var materialStore : MaterialStore
-    @State var isEditing: Bool = true
+//    @State var isEditing: Bool = false
 
     @Environment(\.presentationMode) private var presentationMode
    
@@ -27,24 +27,25 @@ struct MaterialsList : View {
                 List {
 
                     ForEach(materialStore.materials) {material in
-                        NavigationLink(destination: MaterialView(material: material, materialStore: self.materialStore, isEditing: $isEditing)){
+                        NavigationLink(destination: MaterialView(material: material, materialStore: self.materialStore))
+                        {
                             MaterialRow(material: material)
                         }
                     }.onDelete(perform: delete)
+                        
                 }
                      .navigationBarItems(
                      
                      leading: Button("+") {
-                         let newMat = Material(id: self.materialStore.materials.count + 1)
-//                        self.materialStore.textYM = "0"
-//                        self.materialStore.textGM = "0"
+                         let newMat = Material(id: self.materialStore.materials.count)
                          self.materialStore.addMaterial(material: newMat)
                      }
                      .padding()
                      .foregroundColor(Color.blue)
                      .font(.title)
                      
-                     ,trailing: EditButton())
+//                     ,trailing: EditButton()
+                     )
 
 //
                 Spacer()
@@ -63,9 +64,10 @@ struct MaterialsList : View {
         
 //        materialStore.numMaterials -= 1
         
-        
-        for index in 0...materialStore.materials.count - 1{
-            materialStore.materials[index].id = index
+        if materialStore.materials.count >= 1 {
+            for index in 0...materialStore.materials.count - 1{
+                materialStore.materials[index].id = index
+            }
         }
     }
 }
