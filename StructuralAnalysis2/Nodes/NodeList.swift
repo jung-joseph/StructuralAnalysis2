@@ -47,14 +47,8 @@ struct NodeList : View {
 //                            showNodeView.toggle()
                             let newNode = Node(id: self.nodesStore.nodes.count, xcoord: 0, ycoord: 0, zcoord: 0)
                             self.nodesStore.addNode(node: newNode)
-
-                            /*
-                        let newNode = Node(id: self.nodesStore.numNodes, xcoord: 0, ycoord: 0, zcoord: 0)
-                        self.nodesStore.tempText1 = "0"
-                        self.nodesStore.tempText2 = "0"
-                        self.nodesStore.tempText3 = "0"
-                        self.nodesStore.addNode(node: newNode)
-                             */
+//                            scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                            
                     }
                     .padding()
                     .foregroundColor(Color.blue)
@@ -74,6 +68,7 @@ struct NodeList : View {
                 let newNode = Node(id: nodesStore.nodes.count)
                 
                 NodeView(scene: $scene, node: newNode, nodesStore: self.nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore)
+                    
             }
   
                 
@@ -97,7 +92,7 @@ struct NodeList : View {
             }
         }
         
-        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+        scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
 
     }
 }

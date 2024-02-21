@@ -41,7 +41,6 @@ struct LoadView: View {
                     TextField("\(load.loadNode)", value:
                                 $localNode, format: .number)
                 }
-                .textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
                 HStack {
                     Text("Direction:")
                     Picker("", selection: $pickerDirection) {
@@ -75,20 +74,20 @@ struct LoadView: View {
                 Spacer()
                 Button (action: {
                     if localNode != nil {
-                        localNode = 0
+                        loadStore.loads[load.id].loadNode = localNode!
                     }
-                    if localDirection != nil {
-                        localDirection = pickerDirection
-                    }
-                    if localLoadValue == nil {
-                        localLoadValue = 0.0
+//                  Handle pickerDirection
+                    loadStore.loads[load.id].loadDirection = pickerDirection
+//
+                    if localLoadValue != nil {
+                        loadStore.loads[load.id].loadValue = localLoadValue!
                     }
                     
  
                         
                         // MARK: -                           ReDraw entire model
                         
-                        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                    scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
                 
 //                    self.loadStore.printLoads()
                     
@@ -108,6 +107,7 @@ struct LoadView: View {
             Spacer()
             
         }// Vstack
+        .textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
         .onAppear(perform: {
             pickerDirection = load.loadDirection
         })

@@ -25,7 +25,7 @@ struct Truss2DView: View {
     
     
     @Environment(\.presentationMode) private var showDetail
-
+    
     @State private var localMatID: Int?
     @State private var localPropID: Int?
     @State private var localNode1: Int?
@@ -64,25 +64,29 @@ struct Truss2DView: View {
                     }
                     if localPropID != nil {
                         truss2DStore.truss2DElements[truss2d.propertiesID].matID = localPropID!
-
+                        
                     }
                     if localNode1 != nil {
                         truss2DStore.truss2DElements[truss2d.id].node1 = localNode1!
-
+ 
                     }
                     if localNode2 != nil {
                         truss2DStore.truss2DElements[truss2d.id].node2 = localNode2!
 
                     }
                     
+                    let node1 = nodesStore.nodes[truss2DStore.truss2DElements[truss2d.id].node1]
+                    let node2 = nodesStore.nodes[truss2DStore.truss2DElements[truss2d.id].node2]
+                    truss2DStore.truss2DElements[truss2d.id].length = elementLength(node1: node1, node2: node2)
+                    
                     // MARK: -                           ReDraw entire model
                     
-                    scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
-                
+                    scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
                     
                     
-
-//                    self.truss2DStore.printConnectivity()
+                    
+                    
+                    //                    self.truss2DStore.printConnectivity()
                     
                     self.showDetail.wrappedValue.dismiss()
                     
@@ -91,14 +95,23 @@ struct Truss2DView: View {
                     .foregroundColor(Color.white)
                     .cornerRadius(10)
                     .shadow(radius: 10)
-
+                
                 Spacer()
-
+                
             }
             Spacer()
+            
+            
+        }
+        
+    } // VStack
+}
 
-        } // VStack
-    }
+func elementLength(node1:Node, node2:Node) -> Double {
+    let dx = node2.xcoord - node1.xcoord
+    let dy = node2.ycoord - node1.ycoord
+    let dz = node2.zcoord - node1.zcoord
+    return sqrt(dx * dx + dy * dy + dz * dz)
 }
 
 //#if DEBUG

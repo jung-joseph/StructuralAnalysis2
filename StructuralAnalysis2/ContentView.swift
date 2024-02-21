@@ -34,10 +34,12 @@ struct ContentView: View {
     @State var showBCList: Bool = false
     @State var showLoadsList: Bool = false
     @State var showSolutionControl: Bool = false
-    @State var showDisplacements: Bool = false
+    @State var showDisplacementsView: Bool = false
     @State var showModelView: Bool = false
     @State var showSaveModelView: Bool = false
     @State var showLoadModelView: Bool = false
+    
+    @State var showDisplacements: Bool = true
     
     enum CodingKeys: CodingKey {
         case nodesStore
@@ -63,11 +65,21 @@ struct ContentView: View {
                         .font(.largeTitle)
                         .frame(minWidth: 250)
                         .padding()
-                    
+
                     Button(action: {
-                        showMaterialsList.toggle()
+                        materialStore = MaterialStore()
+                        elPropertyStore = ElPropertyStore()
+                        truss2DStore = Truss2DStore()
+                        frame2DStore = Frame2DStore()
+                        truss3DStore = Truss3DStore()
+                        frame3DStore = Frame3DStore()
+                        loadStore = LoadStore()
+                        bcStore = BCStore()
+                        dispStore = DispStore()
+                        nodesStore = NodesStore()
+                        scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
                     }, label: {
-                        Text("Material Properties (\(materialStore.materials.count))")
+                        Text("Clear Model")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     })
                     
@@ -77,6 +89,21 @@ struct ContentView: View {
                         Text("Nodes (\(nodesStore.nodes.count))")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     })
+                    
+                    Button(action: {
+                        showElLibraryList.toggle()
+                    }, label: {
+                        Text("Elements (\(truss2DStore.truss2DElements.count + frame2DStore.frame2DElements.count + truss3DStore.truss3DElements.count + frame3DStore.frame3DElements.count))")
+                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                    })
+                    
+                    Button(action: {
+                        showMaterialsList.toggle()
+                    }, label: {
+                        Text("Material Properties (\(materialStore.materials.count))")
+                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                    })
+
  
                     Button(action: {
                         showElPropertiesList.toggle()
@@ -85,12 +112,7 @@ struct ContentView: View {
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     })
                     
-                    Button(action: {
-                        showElLibraryList.toggle()
-                    }, label: {
-                        Text("Elements (\(truss2DStore.truss2DElements.count + frame2DStore.frame2DElements.count + truss3DStore.truss3DElements.count + frame3DStore.frame3DElements.count))")
-                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                    })
+
                     
                     Button(action: {
                         showBCList.toggle()
@@ -115,6 +137,16 @@ struct ContentView: View {
                     
                     Button(action: {
                         showDisplacements.toggle()
+                        if dispStore.displacements != nil {
+                            scene.drawModel.viewModelAll(showDisplacements: showDisplacements, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                        }
+                    }, label: {
+                        Text("Show Displaced Shape")
+                            .foregroundColor((dispStore.displacements != nil) ? .green : .gray)
+                            .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                    })
+                    Button(action: {
+                        showDisplacementsView.toggle()
                     }, label: {
                         Text("Displacements")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
@@ -127,10 +159,13 @@ struct ContentView: View {
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     }
 
-                    FilePicker(types: [.plainText], allowMultiple: false, title: "Load A Model" ){ urls in
+                    FilePicker(types: [.plainText], allowMultiple: false, title: "Load A Saved Model" ){ urls in
                         print("selected \(urls.count) file(s)")
                         print("URL: \(urls[0])")
 
+//                       clear displacments
+                        dispStore.displacements = nil
+                        
                         let fileUrl = urls[0]
                         if let dataIn = try? Data(contentsOf: fileUrl){
                             print("Sucessful Data call")
@@ -149,7 +184,7 @@ struct ContentView: View {
 // refresh graphics
                                 scene = ModelScene()
                                 
-                                scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                                scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
                             } else {
                                 print("Decoder Failure")
                             }
@@ -165,7 +200,7 @@ struct ContentView: View {
                     Button(action: {
                         scene = ModelScene()
                         
-                        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                        scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
                     }, label: {
                         Text("Refresh Model View")
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
@@ -187,7 +222,7 @@ struct ContentView: View {
                     print("scene childNodes changed in ContentView")
                     scene = ModelScene()
                     
-                    scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                    scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
                 }
             
                 
@@ -202,7 +237,12 @@ struct ContentView: View {
                
         .sheet(isPresented: $showNodesList, content: {
             NodeList(scene: $scene,nodesStore: nodesStore,truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore)
+                .onDisappear(perform: {
+                    scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                })
+                
             .presentationDragIndicator(.visible)})
+        
         
         .sheet(isPresented: $showElPropertiesList, content: {
             ElPropertyList(elPropertyStore: elPropertyStore)
@@ -222,11 +262,17 @@ struct ContentView: View {
             .presentationDragIndicator(.visible)})
         
         .sheet(isPresented: $showSolutionControl, content: {
-            SolutionControlView(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, materialStore: materialStore, elPropertyStore: elPropertyStore, bcStore: bcStore, loadStore: loadStore, dispStore: dispStore)
+            SolutionControlView(scene: $scene, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, materialStore: materialStore, elPropertyStore: elPropertyStore, bcStore: bcStore, loadStore: loadStore, dispStore: dispStore)
+//                .onDisappear(perform: {
+//                    print("viewModelAll called")
+//                    scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+//                })
 //        })
         .presentationDragIndicator(.visible)})
+       
+       
         
-        .sheet(isPresented: $showDisplacements, content: {
+        .sheet(isPresented: $showDisplacementsView, content: {
             DispList(dispStore: dispStore)
             .presentationDragIndicator(.visible)})
         

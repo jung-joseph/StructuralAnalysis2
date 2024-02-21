@@ -216,6 +216,10 @@ class Truss2D: Elements, Identifiable {
         let dy = (nodesStore.nodes[node2].ycoord - nodesStore.nodes[node1].ycoord)
         let dz = (nodesStore.nodes[node2].zcoord - nodesStore.nodes[node1].zcoord)
         self.length = sqrt (dx * dx + dy * dy + dz * dz)
+        print("node1 \(self.node1)")
+        print("node2 \(self.node2)")
+        print("length \(self.length)")
+        print("area \(self.area)")
         
         self.youngsModulus = materialStore.materials[matID].youngsModulus
         
@@ -290,8 +294,10 @@ class Truss2D: Elements, Identifiable {
         
         let theta = angleOfRotation(node1: node1, node2: node2, axis: "x")
         
-//        print("in truss2d elStiffMatrix")
-//        print("theta \(theta) \(theta * 180.0 / Double.pi)")
+        print("in truss2d elStiffMatrix")
+        print("theta \(theta) \(theta * 180.0 / Double.pi)")
+        print("len \(len)")
+        print("crossArea \(crossArea)")
         
         rotationMatrix[0][0] = cos(theta)
         rotationMatrix[0][1] = sin(theta)
@@ -464,8 +470,10 @@ class Frame2D: Elements, Identifiable {
         
         let theta = angleOfRotation(node1: node1, node2: node2, axis: "x")
         
-//                print("in truss2d elStiffMatrix")
-//                print("theta \(theta) \(theta * 180.0 / Double.pi)")
+        print("in frame2d elStiffMatrix")
+        print("theta \(theta) \(theta * 180.0 / Double.pi)")
+        print("len \(len)")
+        print("crossArea \(crossArea)")
         
         rotationMatrix[0][0] = cos(theta)
         rotationMatrix[0][1] = sin(theta)

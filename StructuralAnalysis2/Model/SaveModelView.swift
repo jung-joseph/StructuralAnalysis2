@@ -47,8 +47,8 @@ struct SaveModelView: View{
                 do {
                     let modelJson = try? jsonEncoder.encode(model)
                     let modelJsonString = String(data: modelJson!, encoding: .utf8)
-                    print("JSON file of current Model: ")
-                    print("\(String(describing: modelJsonString))")
+//                    print("JSON file of current Model: ")
+//                    print("\(String(describing: modelJsonString))")
                     
                     // write to file
                     

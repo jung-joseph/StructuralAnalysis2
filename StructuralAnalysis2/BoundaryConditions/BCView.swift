@@ -29,7 +29,11 @@ struct BCView: View {
     @State private var localDirection: Int? = nil
     @State private var localBCValue: Double? = nil
     
+//    @State private var pickerDirection: Int = 0
     @State private var pickerDirection: Int = 0
+    
+ 
+
     
     var body: some View {
         VStack {
@@ -56,6 +60,9 @@ struct BCView: View {
                     .background(Color.red)
                     .cornerRadius(10)
                     .shadow(radius: 10)
+//                    .onAppear(){
+//                        pickerDirection = bc.bcDirection
+//                    }
                 
                 HStack {
                     Text("Value:")
@@ -73,9 +80,10 @@ struct BCView: View {
                     if localNode != nil {
                         bcStore.bcs[bc.id].bcNode = localNode!
                     }
-                    if localDirection != nil {
-                        bcStore.bcs[bc.id].bcDirection = localDirection!
-                    }
+//                    Handle pickerDirection
+//                    print("pickerDirection \(String(describing: pickerDirection))")
+                    bcStore.bcs[bc.id].bcDirection = pickerDirection
+ 
                     if localBCValue != nil {
                         bcStore.bcs[bc.id].bcValue = localBCValue!
 
@@ -83,7 +91,7 @@ struct BCView: View {
 
 
                     // MARK: -                           ReDraw entire model
-                    scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                    scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
 
 //                    self.bcStore.printBCs()
 
@@ -104,6 +112,9 @@ struct BCView: View {
             
         }// Vstack
         .textFieldStyle(RoundedBorderTextFieldStyle()).padding().font(.custom("Arial", size: 20))
+        .onAppear(perform: {
+            pickerDirection = bc.bcDirection
+        })
     }// body
 }
 //#Preview(traits: .landscapeLeft) {

@@ -7,9 +7,11 @@
 //
 
 import SwiftUI
+import SceneKit
 
 struct SolutionControlView: View {
     
+    @Binding var scene: ModelScene
     
     @Bindable var nodesStore : NodesStore
     @Bindable var truss2DStore : Truss2DStore
@@ -60,12 +62,25 @@ struct SolutionControlView: View {
                             let node2 = self.truss2DStore.truss2DElements[i].node2
                             let node1Object = self.nodesStore.nodes[node1]
                             let node2Object = self.nodesStore.nodes[node2]
-                            
+                            let len = self.truss2DStore.truss2DElements[i].length
+//                            var len: Double  {
+//                                let dx = self.nodesStore.nodes[node2].xcoord - self.nodesStore.nodes[node1].xcoord
+//                                let dy = self.nodesStore.nodes[node2].ycoord - self.nodesStore.nodes[node1].ycoord
+//                                let dz = self.nodesStore.nodes[node2].zcoord - self.nodesStore.nodes[node1].zcoord
+//                                return sqrt(dx * dx + dy * dy + dz * dz)
+//
+//                            }
+//                            let node1 = nodesStore.nodes[localNode1!]
+//                            let node2 = nodesStore.nodes[localNode2!]
+//                            truss2DStore.truss2DElements[truss2d.id].length = elementLength(node1: node1, node2: node2)                            self.truss2DStore.truss2DElements[i].length = len
+//                            
                             if self.debugFlag {
                                 print("truss2dElStiff \(i)")
+                                print("node1 \(node1)")
+                                print("node2 \(node2)")
                             }
 
-                            let len = self.truss2DStore.truss2DElements[i].length
+                        
                         
                             let truss2dElStiff = self.truss2DStore.truss2DElements[i].elStiffMatrix(node1: node1Object, node2: node2Object, youngsM: youngsMod, crossArea: area, len: len)
                             
@@ -260,6 +275,8 @@ struct SolutionControlView: View {
                 }
                 if(equationsSolved) {
                     Text("Solution Found " ).animation(Animation.linear(duration: 0.5).delay(3.0)).foregroundColor(.green)
+                    
+  
                 }
                 Spacer()
         }
@@ -268,10 +285,10 @@ struct SolutionControlView: View {
     }
 }
 
-#if DEBUG
-struct SolutionControlView_Previews: PreviewProvider {
-    static var previews: some View {
-        SolutionControlView(nodesStore: NodesStore(), truss2DStore: Truss2DStore(), frame2DStore: Frame2DStore(), truss3DStore: Truss3DStore(), frame3DStore: Frame3DStore(), materialStore: MaterialStore(), elPropertyStore: ElPropertyStore(), bcStore: BCStore(), loadStore: LoadStore(), dispStore: DispStore() )
-    }
-}
-#endif
+//#if DEBUG
+//struct SolutionControlView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SolutionControlView(scene: $scene, nodesStore: NodesStore(), truss2DStore: Truss2DStore(), frame2DStore: Frame2DStore(), truss3DStore: Truss3DStore(), frame3DStore: Frame3DStore(), materialStore: MaterialStore(), elPropertyStore: ElPropertyStore(), bcStore: BCStore(), loadStore: LoadStore(), dispStore: DispStore() )
+//    }
+//}
+//#endif

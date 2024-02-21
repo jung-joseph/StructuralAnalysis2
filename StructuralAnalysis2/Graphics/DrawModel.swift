@@ -22,7 +22,7 @@ class DrawModel{
     
     var truss2DElementColor = UIColor(red: 0, green: 0, blue: 255/255, alpha: 1) // blue, alpha = 1
     var truss3DElementColor = UIColor(red: 0, green: 0, blue: 255/255, alpha: 1) // blue, alpha = 1
-
+    
     var defTruss2DElementColor = UIColor(red: 0, green: 0, blue: 255/255, alpha: 0.75) // blue + transparency
     var defTruss3DElementColor = UIColor(red: 0, green: 0, blue: 255/255, alpha: 0.75) // blue + transparency
     
@@ -31,7 +31,7 @@ class DrawModel{
     
     var defFrame2DElementColor = UIColor(red: 128/255, green: 0, blue: 128/255, alpha: 0.75)// purple + transparency
     var defFrame3DElementColor = UIColor(red: 128/255, green: 0, blue: 128/255, alpha: 0.75)// purple + transparency
-
+    
     
     var bcColor = UIColor(red:255/255, green: 255/255, blue: 0, alpha: 1) //yellow
     var loadColor = UIColor(red: 0, green: 255/255, blue: 0, alpha: 1) // green
@@ -42,12 +42,12 @@ class DrawModel{
     init(nodeRadius: CGFloat, elementRadius: CGFloat) {
         self.nodeRadius = nodeRadius
         self.elementRadius = elementRadius
-
+        
     }
     
     
-
-
+    
+    
     func setMagFactor(dispStore: DispStore, maxDimension: Double, dx: Double, dy: Double, dz: Double, percent: Double) -> Double{
         
         // find max displacment
@@ -74,19 +74,19 @@ class DrawModel{
                 }
             }
             if dx > small {
-                 ratioX = maxDispX / dx
+                ratioX = maxDispX / dx
             } else {
                 ratioX = maxDispX / maxDimension
             }
             
             if dy > small {
-                 ratioY = maxDispY / dy
+                ratioY = maxDispY / dy
             } else {
                 ratioY = maxDispY / maxDimension
             }
             
             if dz > small {
-                 ratioZ = maxDispZ / dz
+                ratioZ = maxDispZ / dz
             } else {
                 ratioZ = maxDispZ / maxDimension
             }
@@ -94,7 +94,7 @@ class DrawModel{
             maxRatio = max(ratioX, ratioY, ratioZ)
             magFactor = percent / maxRatio
         }
-
+        
         if debugFlag {
             print(" maxDispX \(maxDispX)  maxDispY \(maxDispY) maxDispZ \(maxDispZ)")
             print("dx \(dx) dy \(dy) dz \(dz)")
@@ -102,14 +102,14 @@ class DrawModel{
             print("maxRatio \(maxRatio)")
             print("magFactor \(magFactor)")
         }
-
+        
         
         return magFactor
     }
- 
+    
     func characteristicModelDimensions(nodesStore: NodesStore) -> [Double] {
         
-        var output: [Double] = [-0.5, 0.5, -0.5, 0.5, 0, 0, 0, 0, 0, 0]
+        var output: [Double] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         if nodesStore.nodes.count == 0{
             return output
         }
@@ -145,7 +145,7 @@ class DrawModel{
         let dy = maxY - minY
         let dz = maxZ - minZ
         
-
+        
         
         var maxDimension : Double
         
@@ -179,12 +179,12 @@ class DrawModel{
             print("minZ \(minZ) maxZ \(maxZ)")
             print("maxDimension \(maxDimension)")
             print("dx \(dx) dy \(dy) dz \(dz)")
-
+            
         }
         return output
         
     }
-
+    
     func findViewPoint(nodesStore: NodesStore) -> SCNVector3 {
         
         var characteristicDimensions: [Double]
@@ -198,13 +198,14 @@ class DrawModel{
         let minZ : Double = characteristicDimensions[4]
         let maxZ : Double = characteristicDimensions[5]
         let maxDimension : Double = characteristicDimensions[6]
-
+        
         
         let xViewPoint = (minX + maxX)/2
         let yViewPoint = (minY + maxY)/2
-
+        
         let zViewPoint =  max(maxZ,minZ) + maxDimension
-
+        
+        
         if debugFlag {
             print(" in findViewPoint")
             print("xViewPoint \(xViewPoint) yViewPoint \(yViewPoint) zViewPoint \(zViewPoint)")
@@ -214,7 +215,7 @@ class DrawModel{
     }
     
     
-    func viewModelAll(nodesStore: NodesStore, truss2DStore: Truss2DStore, frame2DStore: Frame2DStore, truss3DStore: Truss3DStore, frame3DStore: Frame3DStore, dispStore: DispStore, bcStore: BCStore,  loadStore: LoadStore, scene:SCNScene) {
+    func viewModelAll(showDisplacements:Bool, nodesStore: NodesStore, truss2DStore: Truss2DStore, frame2DStore: Frame2DStore, truss3DStore: Truss3DStore, frame3DStore: Frame3DStore, dispStore: DispStore, bcStore: BCStore,  loadStore: LoadStore, scene:SCNScene) {
         
         
         let dimensions = self.characteristicModelDimensions(nodesStore: nodesStore)
@@ -224,60 +225,77 @@ class DrawModel{
         self.elementRadius = 0.75 * self.nodeRadius
         
         print("In viewModelAll")
-//MARK: - REMOVING ALL NODES BEFORE REDRAWING
+        //MARK: - REMOVING ALL NODES BEFORE REDRAWING
         scene.rootNode.enumerateChildNodes { (node, stop) in
             node.removeFromParentNode()
         }
-
-//        scene.allowsCameraControl = true
         
+        //        scene.allowsCameraControl = true
+        //        let charDimensions = self.characteristicModelDimensions(nodesStore: nodesStore)
         let viewPoint = self.findViewPoint(nodesStore: nodesStore)
-        let cameraNode = createCameraNode()
+        
+        //        let cameraNode = createCameraNode()
+        let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
-        scene.rootNode.addChildNode(cameraNode)
+        cameraNode.camera?.automaticallyAdjustsZRange = true
+        
         cameraNode.position = viewPoint
         
-        self.viewNodes(nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
+        scene.rootNode.addChildNode(cameraNode)
+        
+//        print("cameraNode.positon \(viewPoint)")
+        
+        self.viewNodes(showDisplacements: showDisplacements, nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
+        self.viewTruss2DElements(showDisplacements: showDisplacements, modelStore: truss2DStore, nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
+        self.viewFrame2DElements(showDisplacements: showDisplacements,modelStore: frame2DStore, nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
+        self.viewTruss3DElements(showDisplacements: showDisplacements,modelStore: truss3DStore, nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
+        self.viewFrame3DElements(showDisplacements: showDisplacements,modelStore: frame3DStore, nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
+        
         self.viewBCs(bcStore: bcStore, nodesStore: nodesStore, dims: dimensions, scene: scene)
-        self.viewTruss2DElements(modelStore: truss2DStore, nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
-        self.viewFrame2DElements(modelElements: frame2DStore, nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
-        self.viewTruss3DElements(modelStore: truss3DStore, nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
-        self.viewFrame3DElements(modelStore: frame3DStore, nodesStore: nodesStore, dispStore: dispStore, magFactor: magFactor, scene: scene)
         self.viewLoads(loadStore: loadStore, nodesStore: nodesStore, dims: dimensions, scene: scene)
         
     }
     
     
-    func viewNodes(nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene){
+    func viewNodes(showDisplacements: Bool, nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene){
+        
         if nodesStore.nodes.count >= 1{
-        for i in 0...nodesStore.nodes.count-1 {
-            let newSphere = SCNSphere(radius: nodeRadius)
-            newSphere.firstMaterial?.diffuse.contents = self.nodeColor
-            let newSCNNode = SCNNode(geometry: newSphere)
-            newSCNNode.position = SCNVector3(nodesStore.nodes[i].xcoord,nodesStore.nodes[i].ycoord,nodesStore.nodes[i].zcoord)
-            scene.rootNode.addChildNode(newSCNNode)
-            
-            
-            if dispStore.displacements?.count != nil {
-                let newDefSphere = SCNSphere(radius: nodeRadius)
-                newDefSphere.firstMaterial?.diffuse.contents = self.defnodeColor
-                let newDefSCNNode = SCNNode(geometry: newSphere)
+            for i in 0...nodesStore.nodes.count-1 {
+                let newSphere = SCNSphere(radius: nodeRadius)
+                newSphere.firstMaterial?.diffuse.contents = self.nodeColor
+                let newSCNNode = SCNNode(geometry: newSphere)
+                newSCNNode.position = SCNVector3(nodesStore.nodes[i].xcoord,nodesStore.nodes[i].ycoord,nodesStore.nodes[i].zcoord)
+                scene.rootNode.addChildNode(newSCNNode)
                 
-                newDefSCNNode.position =
-                SCNVector3(nodesStore.nodes[i].xcoord + magFactor * dispStore.displacements![i].u[0],
-                           nodesStore.nodes[i].ycoord + magFactor * dispStore.displacements![i].u[1],
-                           nodesStore.nodes[i].zcoord + magFactor * dispStore.displacements![i].u[2])
-                
-                //                print("x positions \(nodesStore.nodes[i].xcoord + magFactor * dispStore.displacements![i].u[0])")
-                
-                scene.rootNode.addChildNode(newDefSCNNode)
+                if dispStore.displacements?.count != nil {
+                    let newDefSphere = SCNSphere(radius: nodeRadius)
+                    newDefSphere.firstMaterial?.diffuse.contents = self.defnodeColor
+                    let newDefSCNNode = SCNNode(geometry: newSphere)
+                    
+                    if showDisplacements{
+                        newDefSCNNode.position =
+                        SCNVector3(nodesStore.nodes[i].xcoord + magFactor * dispStore.displacements![i].u[0],
+                                   nodesStore.nodes[i].ycoord + magFactor * dispStore.displacements![i].u[1],
+                                   nodesStore.nodes[i].zcoord + magFactor * dispStore.displacements![i].u[2])
+                        scene.rootNode.addChildNode(newDefSCNNode)
+                        
+                        //                    }else {
+                        //                        newDefSCNNode.position =
+                        //                        SCNVector3(nodesStore.nodes[i].xcoord ,
+                        //                                   nodesStore.nodes[i].ycoord ,
+                        //                                   nodesStore.nodes[i].zcoord )
+                    }
+                    
+                    //                print("x positions \(nodesStore.nodes[i].xcoord + magFactor * dispStore.displacements![i].u[0])")
+                    
+                    
+                }
                 
             }
+            
         }
-        
     }
-       }
- 
+    
     func viewBCs(bcStore: BCStore, nodesStore: NodesStore, dims: [Double], scene:SCNScene){
         
         
@@ -299,7 +317,7 @@ class DrawModel{
                 let xCenter = (dims[1] - dims[0]) / 2.0
                 let yCenter = (dims[3] - dims[2]) / 2.0
                 let zCenter = (dims[5] - dims[4]) / 2.0
-
+                
                 
                 let initialX = nodesStore.nodes[node].xcoord
                 let initialY = nodesStore.nodes[node].ycoord
@@ -329,7 +347,7 @@ class DrawModel{
                     newDispSCNNode.rotation = SCNVector4(1.0, 0, 0, Double.pi/2)
                     scene.rootNode.addChildNode(newDispSCNNode)
                 }
-                 else if direction == 2 {
+                else if direction == 2 {
                     if vecToCenter.z > 0 {
                         newDispSCNNode.position = SCNVector3(initialX , initialY , initialZ - shift)
                     } else {
@@ -343,15 +361,15 @@ class DrawModel{
                     newRotSCNNode.position = SCNVector3(initialX, initialY, initialZ)
                     scene.rootNode.addChildNode(newRotSCNNode)
                 }
-    
-
+                
+                
                 
                 
             }
         }
     }
- 
-
+    
+    
     func viewLoads(loadStore: LoadStore, nodesStore: NodesStore, dims: [Double], scene:SCNScene){
         
         
@@ -392,7 +410,7 @@ class DrawModel{
                     newLoadSCNNode.rotation = SCNVector4(0, 0, 1.0,  sign(-value) * Double.pi/2)
                     scene.rootNode.addChildNode(newLoadSCNNode)
                 }
-                    
+                
                 else if direction == 1 {
                     if vecToCenter.y >= 0 {
                         newLoadSCNNode.position = SCNVector3(initialX , initialY + shift, initialZ)
@@ -421,20 +439,21 @@ class DrawModel{
             }
         }
     }
+    
+    
+    
+    func viewTruss2DElements(showDisplacements: Bool, modelStore: Truss2DStore, nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene) {
         
-
-
-    func viewTruss2DElements(modelStore: Truss2DStore, nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene) {
         if modelStore.truss2DElements.count > 0 {
             for i in 0...modelStore.truss2DElements.count-1 {
                 
                 
-//                print("Element: \(i)")
-
+                //                print("Element: \(i)")
+                
                 let node1 = modelStore.truss2DElements[i].node1
                 let node2 = modelStore.truss2DElements[i].node2
                 
-//                print("node1: \(node1) node2: \(node2)")
+                //                print("node1: \(node1) node2: \(node2)")
                 
                 var dx = nodesStore.nodes[node2].xcoord - nodesStore.nodes[node1].xcoord
                 var dy = nodesStore.nodes[node2].ycoord - nodesStore.nodes[node1].ycoord
@@ -454,23 +473,23 @@ class DrawModel{
                     (nodesStore.nodes[node2].ycoord + nodesStore.nodes[node1].ycoord)/2,
                     (nodesStore.nodes[node2].zcoord + nodesStore.nodes[node1].zcoord)/2)
                 
-//                print("angle: \(angle)")
-//                print("vector: \(vector)")
-//                print("rotation: \(newSCNNode.rotation)")
-//                print("position: \(newSCNNode.position)")
+                //                print("angle: \(angle)")
+                //                print("vector: \(vector)")
+                //                print("rotation: \(newSCNNode.rotation)")
+                //                print("position: \(newSCNNode.position)")
                 
                 scene.rootNode.addChildNode(newSCNNode)
                 
                 
-                if dispStore.displacements?.count != nil {
+                if (dispStore.displacements != nil)  {
                     dx = (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0])
-                        - (nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])
+                    - (nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])
                     
                     dy = (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1])
-                        - (nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])
+                    - (nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])
                     
                     dz = nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2]
-                        - nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2]
+                    - nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2]
                     
                     
                     len = CGFloat( sqrt( dx * dx + dy * dy + dz * dz ) )
@@ -482,93 +501,101 @@ class DrawModel{
                     let angle = Float(angleOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0))
                     let vector = axisOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0)
                     newDefSCNNode.rotation = SCNVector4(vector.x,vector.y,vector.z,angle)
-                    newDefSCNNode.position = SCNVector3(
-                        (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0] + nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])/2,
-                        
-                        (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1] + nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])/2,
-                        
-                        (nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2] + nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2])/2)
                     
-                    scene.rootNode.addChildNode(newDefSCNNode)
-                    
+                    if showDisplacements{
+                        newDefSCNNode.position = SCNVector3(
+                            (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0] + nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])/2,
+                            
+                            (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1] + nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])/2,
+                            
+                            (nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2] + nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2])/2)
+                        
+                        scene.rootNode.addChildNode(newDefSCNNode)
+                    }
                 }
                 
             }
             
         }
+        
     }
- 
     
-    func viewFrame2DElements(modelElements: Frame2DStore, nodesStore: NodesStore,dispStore: DispStore, magFactor: Double, scene:SCNScene) {
-        if modelElements.frame2DElements.count > 0 {
-            for i in 0...modelElements.frame2DElements.count-1 {
+    
+    func viewFrame2DElements(showDisplacements: Bool, modelStore: Frame2DStore, nodesStore: NodesStore,dispStore: DispStore, magFactor: Double, scene:SCNScene) {
+        
+        if modelStore.frame2DElements.count > 0 {
+            for i in 0...modelStore.frame2DElements.count-1 {
+                
+                let node1 = modelStore.frame2DElements[i].node1
+                let node2 = modelStore.frame2DElements[i].node2
+                
+                var dx = nodesStore.nodes[node2].xcoord - nodesStore.nodes[node1].xcoord
+                var dy = nodesStore.nodes[node2].ycoord - nodesStore.nodes[node1].ycoord
+                var dz = nodesStore.nodes[node2].zcoord - nodesStore.nodes[node1].zcoord
+                
+                
+                var len = CGFloat( sqrt( dx * dx + dy * dy + dz * dz ) )
+                
+                let newCylinder = SCNCylinder(radius: elementRadius, height: len)
+                newCylinder.firstMaterial?.diffuse.contents = self.frame2DElementColor
+                let newSCNNode = SCNNode(geometry: newCylinder)
+                let angle = Float(angleOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0))
+                let vector = axisOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0)
+                newSCNNode.rotation = SCNVector4(vector.x,vector.y,vector.z,angle)
+                newSCNNode.position = SCNVector3(
+                    (nodesStore.nodes[node2].xcoord + nodesStore.nodes[node1].xcoord)/2,
+                    (nodesStore.nodes[node2].ycoord + nodesStore.nodes[node1].ycoord)/2,
+                    (nodesStore.nodes[node2].zcoord + nodesStore.nodes[node1].zcoord)/2)
+                
+                scene.rootNode.addChildNode(newSCNNode)
+                
+                if dispStore.displacements != nil {
+                    dx = (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0])
+                    - (nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])
+                    
+                    dy = (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1])
+                    - (nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])
+                    
+                    dz = nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2]
+                    - nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2]
+                    
+                    
+                    len = CGFloat( sqrt( dx * dx + dy * dy + dz * dz ) )
+                    
+                    //                                print("len \(len)")
+                    
+                    let newDefCylinder = SCNCylinder(radius: elementRadius, height: len)
+                    newDefCylinder.firstMaterial?.diffuse.contents = self.defFrame2DElementColor
+                    let newDefSCNNode = SCNNode(geometry: newDefCylinder)
+                    let angle = Float(angleOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0))
+                    let vector = axisOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0)
+                    newDefSCNNode.rotation = SCNVector4(vector.x,vector.y,vector.z,angle)
+                    
+                    if showDisplacements {
+                        newDefSCNNode.position = SCNVector3(
+                            (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0] + nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])/2,
+                            
+                            (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1] + nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])/2,
+                            
+                            (nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2] + nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2])/2)
                         
-                            let node1 = modelElements.frame2DElements[i].node1
-                            let node2 = modelElements.frame2DElements[i].node2
-                            
-                            var dx = nodesStore.nodes[node2].xcoord - nodesStore.nodes[node1].xcoord
-                            var dy = nodesStore.nodes[node2].ycoord - nodesStore.nodes[node1].ycoord
-                            var dz = nodesStore.nodes[node2].zcoord - nodesStore.nodes[node1].zcoord
-
-
-                            var len = CGFloat( sqrt( dx * dx + dy * dy + dz * dz ) )
-                            
-                            let newCylinder = SCNCylinder(radius: elementRadius, height: len)
-                            newCylinder.firstMaterial?.diffuse.contents = self.frame2DElementColor
-                            let newSCNNode = SCNNode(geometry: newCylinder)
-                            let angle = Float(angleOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0))
-                            let vector = axisOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0)
-                            newSCNNode.rotation = SCNVector4(vector.x,vector.y,vector.z,angle)
-                            newSCNNode.position = SCNVector3(
-                              (nodesStore.nodes[node2].xcoord + nodesStore.nodes[node1].xcoord)/2,
-                                (nodesStore.nodes[node2].ycoord + nodesStore.nodes[node1].ycoord)/2,
-                                (nodesStore.nodes[node2].zcoord + nodesStore.nodes[node1].zcoord)/2)
-
-                            scene.rootNode.addChildNode(newSCNNode)
-                            
-                            if dispStore.displacements?.count != nil {
-                                dx = (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0])
-                                    - (nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])
-                                
-                                dy = (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1])
-                                    - (nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])
-                                
-                                dz = nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2]
-                                    - nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2]
-
-
-                                len = CGFloat( sqrt( dx * dx + dy * dy + dz * dz ) )
-                                
-//                                print("len \(len)")
-                                
-                                let newDefCylinder = SCNCylinder(radius: elementRadius, height: len)
-                                newDefCylinder.firstMaterial?.diffuse.contents = self.defFrame2DElementColor
-                                let newDefSCNNode = SCNNode(geometry: newDefCylinder)
-                                let angle = Float(angleOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0))
-                                let vector = axisOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0)
-                                newDefSCNNode.rotation = SCNVector4(vector.x,vector.y,vector.z,angle)
-                                newDefSCNNode.position = SCNVector3(
-                                  (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0] + nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])/2,
-                                  
-                                  (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1] + nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])/2,
-                                    
-                                  (nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2] + nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2])/2)
-
-                                scene.rootNode.addChildNode(newDefSCNNode)
-                                
-                            }
-                            
-                        }
-                        
+                        scene.rootNode.addChildNode(newDefSCNNode)
+                    }
+                }
+                
             }
-
-
+            
+        }
+        
+        
     }
-  
     
-    func viewTruss3DElements(modelStore: Truss3DStore, nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene) {
+    
+    func viewTruss3DElements(showDisplacements: Bool, modelStore: Truss3DStore, nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene) {
+        
         if modelStore.truss3DElements.count > 0 {
             for i in 0...modelStore.truss3DElements.count-1 {
+                
                 
                 let node1 = modelStore.truss3DElements[i].node1
                 let node2 = modelStore.truss3DElements[i].node2
@@ -594,15 +621,15 @@ class DrawModel{
                 scene.rootNode.addChildNode(newSCNNode)
                 
                 
-                if dispStore.displacements?.count != nil {
+                if dispStore.displacements != nil {
                     dx = (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0])
-                        - (nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])
+                    - (nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])
                     
                     dy = (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1])
-                        - (nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])
+                    - (nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])
                     
                     dz = nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2]
-                        - nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2]
+                    - nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2]
                     
                     
                     len = CGFloat( sqrt( dx * dx + dy * dy + dz * dz ) )
@@ -614,24 +641,29 @@ class DrawModel{
                     let angle = Float(angleOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0))
                     let vector = axisOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0)
                     newDefSCNNode.rotation = SCNVector4(vector.x,vector.y,vector.z,angle)
-                    newDefSCNNode.position = SCNVector3(
-                        (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0] + nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])/2,
-                        
-                        (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1] + nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])/2,
-                        
-                        (nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2] + nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2])/2)
                     
-                    scene.rootNode.addChildNode(newDefSCNNode)
+                    if showDisplacements {
+                        newDefSCNNode.position = SCNVector3(
+                            (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0] + nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])/2,
+                            
+                            (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1] + nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])/2,
+                            
+                            (nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2] + nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2])/2)
+                        
+                        scene.rootNode.addChildNode(newDefSCNNode)
+                    }
                     
                 }
                 
             }
             
         }
+        
     }
-
     
-    func viewFrame3DElements(modelStore: Frame3DStore, nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene) {
+    
+    func viewFrame3DElements(showDisplacements: Bool,modelStore: Frame3DStore, nodesStore: NodesStore, dispStore: DispStore, magFactor: Double, scene:SCNScene) {
+        
         if modelStore.frame3DElements.count > 0 {
             for i in 0...modelStore.frame3DElements.count-1 {
                 
@@ -659,15 +691,15 @@ class DrawModel{
                 scene.rootNode.addChildNode(newSCNNode)
                 
                 
-                if dispStore.displacements?.count != nil {
+                if dispStore.displacements != nil {
                     dx = (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0])
-                        - (nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])
+                    - (nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])
                     
                     dy = (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1])
-                        - (nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])
+                    - (nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])
                     
                     dz = nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2]
-                        - nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2]
+                    - nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2]
                     
                     
                     len = CGFloat( sqrt( dx * dx + dy * dy + dz * dz ) )
@@ -679,23 +711,27 @@ class DrawModel{
                     let angle = Float(angleOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0))
                     let vector = axisOfRotation(a1: dx, a2: dy, a3: dz, b1: 0, b2: 1, b3: 0)
                     newDefSCNNode.rotation = SCNVector4(vector.x,vector.y,vector.z,angle)
-                    newDefSCNNode.position = SCNVector3(
-                        (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0] + nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])/2,
-                        
-                        (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1] + nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])/2,
-                        
-                        (nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2] + nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2])/2)
                     
-                    scene.rootNode.addChildNode(newDefSCNNode)
+                    if showDisplacements {
+                        newDefSCNNode.position = SCNVector3(
+                            (nodesStore.nodes[node2].xcoord + magFactor * dispStore.displacements![node2].u[0] + nodesStore.nodes[node1].xcoord + magFactor * dispStore.displacements![node1].u[0])/2,
+                            
+                            (nodesStore.nodes[node2].ycoord + magFactor * dispStore.displacements![node2].u[1] + nodesStore.nodes[node1].ycoord + magFactor * dispStore.displacements![node1].u[1])/2,
+                            
+                            (nodesStore.nodes[node2].zcoord + magFactor * dispStore.displacements![node2].u[2] + nodesStore.nodes[node1].zcoord + magFactor * dispStore.displacements![node1].u[2])/2)
+                        
+                        scene.rootNode.addChildNode(newDefSCNNode)
+                    }
                     
                 }
                 
             }
             
         }
+        
     }
-  
-
+    
+    
     
     func angleOfRotation(a1:Double, a2: Double, a3: Double, b1: Double, b2: Double, b3: Double) -> Double {
         let lena = sqrt(a1*a1 + a2*a2 + a3*a3)
@@ -704,7 +740,7 @@ class DrawModel{
         return -angle
         
     }
- 
+    
     
     func axisOfRotation(a1:Double, a2: Double, a3: Double, b1: Double, b2: Double, b3: Double) -> SCNVector3 {
         let lena = sqrt(a1*a1 + a2*a2 + a3*a3)
@@ -723,6 +759,6 @@ class DrawModel{
         
     }
     
-
-
+    
+    
 }

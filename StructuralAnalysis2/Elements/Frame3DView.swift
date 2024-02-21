@@ -99,10 +99,12 @@ struct Frame3DView: View {
                         frame3DStore.frame3DElements[frame3d.id].node2 = localNode2!
 
                     }
-                    
+                    let node1 = nodesStore.nodes[frame3DStore.frame3DElements[frame3d.id].node1]
+                    let node2 = nodesStore.nodes[frame3DStore.frame3DElements[frame3d.id].node2]
+                    frame3DStore.frame3DElements[frame3d.id].length = elementLength(node1: node1, node2: node2)
                     // MARK: -                           ReDraw entire model
                     
-                    scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+                    scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
                 
 
                     self.showDetail.wrappedValue.dismiss()

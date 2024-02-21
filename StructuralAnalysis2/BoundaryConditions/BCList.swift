@@ -58,7 +58,8 @@ struct BCList: View {
                     .foregroundColor(Color.blue)
                     .font(.title)
                     
-                    ,trailing: EditButton())
+//                    ,trailing: EditButton()
+                    )
                 
                     .navigationBarTitle("Boundary Conditions").font(.largeTitle)
 
@@ -92,7 +93,7 @@ struct BCList: View {
         }
     }
         
-        scene.drawModel.viewModelAll(nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
+        scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
 
     }
     
