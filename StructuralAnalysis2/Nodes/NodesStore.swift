@@ -138,6 +138,7 @@ class NodesStore: Encodable, Decodable {
         }
         
         self.totalNumDofs = nodesStore.nodes[nodesStore.nodes.count - 1].beginDofIndex + nodesStore.nodes[nodesStore.nodes.count - 1].numDof
+//        print("totalNumDofs \(self.totalNumDofs)")
     }
     
  

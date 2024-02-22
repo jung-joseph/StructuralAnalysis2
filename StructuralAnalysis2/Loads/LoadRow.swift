@@ -23,7 +23,7 @@ struct LoadRow: View {
             HStack{
                 Text("Direction: \(directions[load.loadDirection]!)").font(.custom("Arial", size: 20))
                 Spacer()
-                Text("Value: \(load.loadValue)").font(.custom("Arial", size: 20))
+                Text("Value: " + String(format: "%.3f", self.load.loadValue)).font(.custom("Arial", size: 20))
                 Spacer()
             }
 

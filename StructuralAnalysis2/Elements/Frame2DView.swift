@@ -35,6 +35,9 @@ struct Frame2DView: View {
     @State private var localPropID: Int?
     @State private var localNode1: Int?
     @State private var localNode2: Int?
+//    @State private var localPin1: Bool? = false
+//    @State private var localPin2: Bool?
+
     
     var body: some View {
         
@@ -50,12 +53,15 @@ struct Frame2DView: View {
                     Text("PropertyID:").font(.custom("Arial", size: 20))
                     TextField("\(frame2d.propertiesID)", value: $localPropID, format: .number)
                 }
+                
                 HStack {
                     Text("Node1:").font(.custom("Arial", size: 20))
                     TextField("\(frame2d.node1)", value: $localNode1, format: .number)
-                    Toggle(isOn: $node1IsOn) {
+//                    Toggle(isOn: $node1IsOn) {
+                        Toggle(isOn: $frame2DStore.frame2DElements[frame2d.id].pin1) {
+
                         Text("Pin End").font(.custom("Arial", size: 20))
-                        if node1IsOn {
+                        if frame2DStore.frame2DElements[frame2d.id].pin1 {
                             Text("ON").font(.custom("Arial", size: 20))
                         }
                         
@@ -66,9 +72,9 @@ struct Frame2DView: View {
                     Text("Node2:")
                     TextField("\(frame2d.node2)", value: $localNode2, format: .number)
 //                    Spacer()
-                    Toggle(isOn: $node2IsOn) {
+                    Toggle(isOn: $frame2DStore.frame2DElements[frame2d.id].pin2) {
                         Text("Pin End").font(.custom("Arial", size: 20))
-                        if node2IsOn {
+                        if frame2DStore.frame2DElements[frame2d.id].pin2 {
                             Text("ON").font(.custom("Arial", size: 20))
                         }
 
@@ -86,17 +92,17 @@ struct Frame2DView: View {
                         frame2DStore.frame2DElements[frame2d.id].matID = localMatID!
                     }
                     if localPropID != nil {
-                        frame2DStore.frame2DElements[frame2d.propertiesID].matID = localPropID!
-
+                        frame2DStore.frame2DElements[frame2d.id].propertiesID = localPropID!
                     }
                     if localNode1 != nil {
                         frame2DStore.frame2DElements[frame2d.id].node1 = localNode1!
-
                     }
                     if localNode2 != nil {
                         frame2DStore.frame2DElements[frame2d.id].node2 = localNode2!
-
                     }
+                    frame2DStore.frame2DElements[frame2d.id].pin1 = frame2DStore.frame2DElements[frame2d.id].pin1
+                    frame2DStore.frame2DElements[frame2d.id].pin2 = frame2DStore.frame2DElements[frame2d.id].pin2
+
                     let node1 = nodesStore.nodes[frame2DStore.frame2DElements[frame2d.id].node1]
                     let node2 = nodesStore.nodes[frame2DStore.frame2DElements[frame2d.id].node2]
                     frame2DStore.frame2DElements[frame2d.id].length = elementLength(node1: node1, node2: node2)

@@ -171,7 +171,6 @@ struct ContentView: View {
                             print("Sucessful Data call")
                             if  let model = try? JSONDecoder().decode(Model.self, from: (dataIn) ){
                                 
-                                print("model nodes: \(model.nodesStore.nodes)")
                                 self.nodesStore = model.nodesStore
                                 self.materialStore = model.materialStore
                                 self.elPropertyStore = model.elPropertyStore
@@ -181,7 +180,12 @@ struct ContentView: View {
                                 self.frame3DStore = model.frame3DStore
                                 self.loadStore = model.loadStore
                                 self.bcStore = model.bcStore
-// refresh graphics
+                                
+                    // recalculate element lengths for models not created in the app, i.e, models created via a json file
+                                
+                                calElementLengths(truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, nodesStore: nodesStore)
+                                
+                                // refresh graphics
                                 scene = ModelScene()
                                 
                                 scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
@@ -282,6 +286,42 @@ struct ContentView: View {
         
 
     }
+}
+func calElementLengths(truss2DStore: Truss2DStore, frame2DStore: Frame2DStore, truss3DStore: Truss3DStore, frame3DStore: Frame3DStore, nodesStore: NodesStore) {
+    
+    for truss2DElement in truss2DStore.truss2DElements {
+        let node2 = nodesStore.nodes[truss2DElement.node2]
+        let node1 = nodesStore.nodes[truss2DElement.node1]
+        let dx = (node2.xcoord - node1.xcoord)
+        let dy = (node2.ycoord - node1.ycoord)
+        let dz = (node2.zcoord - node1.zcoord)
+        truss2DElement.length = sqrt (dx * dx + dy * dy + dz * dz)
+    }
+    for truss3DElement in truss3DStore.truss3DElements {
+        let node2 = nodesStore.nodes[truss3DElement.node2]
+        let node1 = nodesStore.nodes[truss3DElement.node1]
+        let dx = (node2.xcoord - node1.xcoord)
+        let dy = (node2.ycoord - node1.ycoord)
+        let dz = (node2.zcoord - node1.zcoord)
+        truss3DElement.length = sqrt (dx * dx + dy * dy + dz * dz)
+    }
+    for frame2DElement in frame2DStore.frame2DElements {
+        let node2 = nodesStore.nodes[frame2DElement.node2]
+        let node1 = nodesStore.nodes[frame2DElement.node1]
+        let dx = (node2.xcoord - node1.xcoord)
+        let dy = (node2.ycoord - node1.ycoord)
+        let dz = (node2.zcoord - node1.zcoord)
+        frame2DElement.length = sqrt (dx * dx + dy * dy + dz * dz)
+    }
+    for frame3DElement in frame3DStore.frame3DElements {
+        let node2 = nodesStore.nodes[frame3DElement.node2]
+        let node1 = nodesStore.nodes[frame3DElement.node1]
+        let dx = (node2.xcoord - node1.xcoord)
+        let dy = (node2.ycoord - node1.ycoord)
+        let dz = (node2.zcoord - node1.zcoord)
+        frame3DElement.length = sqrt (dx * dx + dy * dy + dz * dz)
+    }
+    
 }
 func createCameraNode() -> SCNNode {
     let cameraNode = SCNNode()

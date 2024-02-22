@@ -26,12 +26,9 @@ class Elements: Codable {
         case numDOFPerNode
         case elementType
         case connectivity
-//        case elementStiffness
     }
     
-//    @ObservedObject var nodesStore : NodesStore
-//    @ObservedObject var materialStore : MaterialStore
-//    @ObservedObject var elPropertyStore : ElPropertyStore
+
 
 
     
@@ -105,13 +102,15 @@ class Elements: Codable {
         let dot = (a1*b1 + a2*b2 + a3*b3)
         
         var angle = acos( dot )
-        
-        if ( b1 <= 0.0 && b2 <= 0.0 ){ // quadrant 3
-            angle = -angle
-        } else if ( b1 >= 0.0 && b2 <= 0.0 ){  // quadrant 4
-            angle = -angle
+//        print()
+//        print("aCos angle: \(angle)  \(angle * 180.0/Double.pi)")
+//        print()
+        if (  b2 < 0.0 ){ // quadrant 3 or 4
+            angle = angle + (2.0 * (Double.pi - angle))
         }
-        
+//        print()
+//        print("Adjusted angle: \(angle)  \(angle * 180.0/Double.pi)")
+//        print()
         return (angle)
         
     }
@@ -216,10 +215,10 @@ class Truss2D: Elements, Identifiable {
         let dy = (nodesStore.nodes[node2].ycoord - nodesStore.nodes[node1].ycoord)
         let dz = (nodesStore.nodes[node2].zcoord - nodesStore.nodes[node1].zcoord)
         self.length = sqrt (dx * dx + dy * dy + dz * dz)
-        print("node1 \(self.node1)")
-        print("node2 \(self.node2)")
-        print("length \(self.length)")
-        print("area \(self.area)")
+//        print("node1 \(self.node1)")
+//        print("node2 \(self.node2)")
+//        print("length \(self.length)")
+//        print("area \(self.area)")
         
         self.youngsModulus = materialStore.materials[matID].youngsModulus
         
@@ -266,17 +265,7 @@ class Truss2D: Elements, Identifiable {
     
     func elStiffMatrix(node1: Node, node2: Node, youngsM: Double, crossArea: Double, len: Double)->[[Double]] {
         
-//        var elstiff = [[Double]]()
-//        let zeros = simd_double4(0.0 , 0.0, 0.0 , 0.0)
-        
-//        var elstiff = simd_double4x4(columns: (zeros, zeros, zeros, zeros) )
-//
-//        var rotationMatrix = simd_double4x4(columns: (zeros, zeros, zeros, zeros) )
-//
-//        var stiff = simd_double4x4(columns: (zeros, zeros, zeros, zeros) )
-//
-//        var rTK = simd_double4x4(columns: (zeros, zeros, zeros, zeros) ) // rotationTranspose * elstiffness
-        
+
         let rTranspose : [[Double]]
          
         let rTransposeK : [[Double]]
@@ -294,10 +283,10 @@ class Truss2D: Elements, Identifiable {
         
         let theta = angleOfRotation(node1: node1, node2: node2, axis: "x")
         
-        print("in truss2d elStiffMatrix")
-        print("theta \(theta) \(theta * 180.0 / Double.pi)")
-        print("len \(len)")
-        print("crossArea \(crossArea)")
+//        print("in truss2d elStiffMatrix")
+//        print("theta \(theta) \(theta * 180.0 / Double.pi)")
+//        print("len \(len)")
+//        print("crossArea \(crossArea)")
         
         rotationMatrix[0][0] = cos(theta)
         rotationMatrix[0][1] = sin(theta)
@@ -308,8 +297,7 @@ class Truss2D: Elements, Identifiable {
         rotationMatrix[3][2] = -sin(theta)
         rotationMatrix[3][3] = cos(theta)
 
-//        print("rotation matrix")
-//        print(rotationMatrix)
+
         
         elstiff[0][0] = 1.0  * youngsM * crossArea / len
         elstiff[0][2] = -1.0 * youngsM * crossArea / len
@@ -318,8 +306,7 @@ class Truss2D: Elements, Identifiable {
         
  
         
-//        rTK = rotationMatrix.transpose * elstiff
-//        stiff = rTK * rotationMatrix
+
         rTranspose = transpose(rotationMatrix)
         rTransposeK = multiply(rTranspose, elstiff)
         stiff = multiply(rTransposeK, rotationMatrix)
@@ -470,10 +457,10 @@ class Frame2D: Elements, Identifiable {
         
         let theta = angleOfRotation(node1: node1, node2: node2, axis: "x")
         
-        print("in frame2d elStiffMatrix")
-        print("theta \(theta) \(theta * 180.0 / Double.pi)")
-        print("len \(len)")
-        print("crossArea \(crossArea)")
+//        print("in frame2d elStiffMatrix")
+//        print("theta \(theta) \(theta * 180.0 / Double.pi)")
+//        print("len \(len)")
+//        print("crossArea \(crossArea)")
         
         rotationMatrix[0][0] = cos(theta)
         rotationMatrix[0][1] = sin(theta)
@@ -493,7 +480,7 @@ class Frame2D: Elements, Identifiable {
 //               print("In Frame elStiffMatrix ")
 //               print("pin1 \(pin1) pin2 \(pin2)")
         
-        if pin1 == false && pin2 == false {
+        if !pin1 && !pin2 {
             elstiff[0][0] = 1.0  * youngsM * crossArea / len
             elstiff[0][3] = -1.0 * youngsM * crossArea / len
             
@@ -520,7 +507,7 @@ class Frame2D: Elements, Identifiable {
             elstiff[5][4] = -6.0 * youngsM * izz / (len * len)
             elstiff[5][5] =  4.0 * youngsM * izz / (len)
             
-        } else if pin1 == true {
+        } else if pin1 && !pin2 {
             
             elstiff[0][0] =  1.0  * youngsM * crossArea / len
             elstiff[0][3] = -1.0 * youngsM * crossArea / len
@@ -540,7 +527,7 @@ class Frame2D: Elements, Identifiable {
             elstiff[5][4] = -3.0 * youngsM * izz / (len * len)
             elstiff[5][5] =  3.0 * youngsM * izz / (len)
 
-        } else if pin2 {
+        } else if pin2 && !pin1{
             
             elstiff[0][0] =  1.0  * youngsM * crossArea / len
             elstiff[0][3] = -1.0  * youngsM * crossArea / len
@@ -565,14 +552,15 @@ class Frame2D: Elements, Identifiable {
         } else if pin1 == true && pin2 == true{
             
            elstiff[0][0] =  1.0  * youngsM * crossArea / len
-           elstiff[0][6] = -1.0  * youngsM * crossArea / len
+           elstiff[0][3] = -1.0  * youngsM * crossArea / len
            
-           elstiff[6][0] = -1.0 * youngsM * crossArea / len
-           elstiff[6][6] =  1.0  * youngsM * crossArea / len
+           elstiff[3][0] = -1.0 * youngsM * crossArea / len
+           elstiff[3][3] =  1.0  * youngsM * crossArea / len
            
         }
-        
+//        print("rotationMatrix: \(rotationMatrix)")
         rTranspose = transpose(rotationMatrix)
+//        print("rTranspose: \(rTranspose)")
         rTransposeK = multiply(rTranspose, elstiff)
         stiff = multiply(rTransposeK, rotationMatrix)
         
@@ -586,10 +574,12 @@ class Frame2D: Elements, Identifiable {
         var localToGlobalMap = [Int]()
         let startingDof1 = nodesStore.nodes[node1].beginDofIndex
         let startingDof2 = nodesStore.nodes[node2].beginDofIndex
-        
+//        print()
+//        print("***Assembling Frame2D elements***")
 //        print("node1 \(node1)  node2 \(node2)")
 //        print(" startingDof1 \(startingDof1)")
 //        print(" startingDof2 \(startingDof2)")
+//        print()
 
         localToGlobalMap = Array(repeating: 0, count: 6)
         localToGlobalMap[0] = startingDof1

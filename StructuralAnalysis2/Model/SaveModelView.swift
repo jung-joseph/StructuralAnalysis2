@@ -46,9 +46,8 @@ struct SaveModelView: View{
                 let model = Model(nodesStore: nodesStore, materialStore: materialStore, elPropertyStore: elPropertyStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore, bcStore: bcStore)
                 do {
                     let modelJson = try? jsonEncoder.encode(model)
-                    let modelJsonString = String(data: modelJson!, encoding: .utf8)
-//                    print("JSON file of current Model: ")
-//                    print("\(String(describing: modelJsonString))")
+//                    let modelJsonString = String(data: modelJson!, encoding: .utf8)
+
                     
                     // write to file
                     

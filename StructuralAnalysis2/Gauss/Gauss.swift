@@ -11,7 +11,8 @@ import Foundation
 @Observable
 class Gauss{
     var matrix = [[Double]]() // create an empty matrix
-    var x = [Double]()
+    var x = [Double]() // create the solution vector
+    
 //    var numDofPerNode: Int
     var neq: Int
     
@@ -35,18 +36,12 @@ class Gauss{
             print(" ")
         }
         
-//        for i in 0...neq - 1 {
-//            for j in 0...neq - 1 {
-//                print("row: \(i) column: \(j) value: \(matrix[i][j])")
-//            }
-//        }
         print()
     }
     
     func printBVector() {
         print("B Vector")
         for i in 0...neq - 1 {
-                
             print(" \(matrix[i][neq])")
         }
         print()
@@ -86,8 +81,6 @@ class Gauss{
             }
             x[i] = (matrix[i][neq] + sum)/matrix[i][i]
         }
-        
- 
         return x
     }
     

@@ -38,20 +38,26 @@ struct SolutionControlView: View {
             VStack {
                 Spacer()
                 Button(action: {
-                        
-//                    let debugFlag: Bool = false  //debug Flag
                     
-                        // Scan all elements to determine the number of dofs for each node, nodesStore.nodes[].numdof, and store the index for the first dof for each node
+                    //                    let debugFlag: Bool = false  //debug Flag
+                    
+                    // Scan all elements to determine the number of dofs for each node, nodesStore.nodes[].numdof, and store the index for the first dof for each node
                     self.nodesStore.scanNodesForNumDof(nodesStore: self.nodesStore, truss2DStore: self.truss2DStore, frame2DStore: self.frame2DStore, truss3DStore: self.truss3DStore, frame3DStore: self.frame3DStore)
                     
-                        // Create the system matrix
+                    if debugFlag {
+                        print("In SolutionControlView")
+                        print("TotalNumDofs \(self.nodesStore.totalNumDofs)")
+                    }
+                    // Create the system matrix
                     let systemMatrix = Gauss(neq: self.nodesStore.totalNumDofs)
-                        
-                        self.createdSystemMatrix = true
-                        
+                    
+                    self.createdSystemMatrix = true
+                    
+                    if debugFlag {
                         print(" Created  \(systemMatrix.neq) Equations" )
-                        
-                        // Form element Stiffness matrices and assemble for truss2d elements
+                    }
+                    
+                    // Form element Stiffness matrices and assemble for truss2d elements
                     if self.truss2DStore.truss2DElements.count > 0 {
                         for i in 0...self.truss2DStore.truss2DElements.count - 1 {
                             let matid = self.truss2DStore.truss2DElements[i].matID
@@ -63,17 +69,8 @@ struct SolutionControlView: View {
                             let node1Object = self.nodesStore.nodes[node1]
                             let node2Object = self.nodesStore.nodes[node2]
                             let len = self.truss2DStore.truss2DElements[i].length
-//                            var len: Double  {
-//                                let dx = self.nodesStore.nodes[node2].xcoord - self.nodesStore.nodes[node1].xcoord
-//                                let dy = self.nodesStore.nodes[node2].ycoord - self.nodesStore.nodes[node1].ycoord
-//                                let dz = self.nodesStore.nodes[node2].zcoord - self.nodesStore.nodes[node1].zcoord
-//                                return sqrt(dx * dx + dy * dy + dz * dz)
-//
-//                            }
-//                            let node1 = nodesStore.nodes[localNode1!]
-//                            let node2 = nodesStore.nodes[localNode2!]
-//                            truss2DStore.truss2DElements[truss2d.id].length = elementLength(node1: node1, node2: node2)                            self.truss2DStore.truss2DElements[i].length = len
-//                            
+
+                            
                             if self.debugFlag {
                                 print("truss2dElStiff \(i)")
                                 print("node1 \(node1)")
@@ -104,9 +101,9 @@ struct SolutionControlView: View {
                             let node2 = self.frame2DStore.frame2DElements[i].node2
                             let node1Object = self.nodesStore.nodes[node1]
                             let node2Object = self.nodesStore.nodes[node2]
-
+                   
                             let len = self.frame2DStore.frame2DElements[i].length
-                        
+                            
                             let frame2DElStiff = self.frame2DStore.frame2DElements[i].elStiffMatrix(node1: node1Object, node2: node2Object, youngsM: youngsMod, crossArea: area, len: len, izz: izz)
                             
                             if self.debugFlag {
@@ -114,6 +111,18 @@ struct SolutionControlView: View {
                                 print("\(frame2DElStiff)")
                             }
 
+                            if i == 4 {
+                                print()
+                                print("node1 \(node1) node2 \(node2)")
+                                print("node1Object \(node1Object) node2Object \(node2Object)")
+                                print("youngsModulus \(youngsMod)")
+                                print("crossArea \(area)")
+                                print("len \(len)")
+                                print("Izz \(izz)")
+                                print("frame2dElStiff \(i)")
+                                print("\(frame2DElStiff)")
+                                print()
+                            }
                             
                             self.frame2DStore.frame2DElements[i].assemble(system: systemMatrix, elStiff: frame2DElStiff, nodesStore: self.nodesStore)
                             
@@ -237,8 +246,10 @@ struct SolutionControlView: View {
                         
 
                     self.dispStore.fillDispStore(x: x, nodesStore: self.nodesStore, truss2DStore: self.truss2DStore, frame2DStore: self.frame2DStore, truss3DStore: self.truss3DStore, frame3DStore: self.frame3DStore)
-                    self.dispStore.printDispStore(numNodes: self.nodesStore.nodes.count)
-                        
+                    
+                    if debugFlag {
+                        self.dispStore.printDispStore(numNodes: self.nodesStore.nodes.count)
+                    }
                         
                 })  {
                     

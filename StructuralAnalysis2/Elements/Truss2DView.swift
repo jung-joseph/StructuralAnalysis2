@@ -63,7 +63,7 @@ struct Truss2DView: View {
                         truss2DStore.truss2DElements[truss2d.id].matID = localMatID!
                     }
                     if localPropID != nil {
-                        truss2DStore.truss2DElements[truss2d.propertiesID].matID = localPropID!
+                        truss2DStore.truss2DElements[truss2d.id].propertiesID = localPropID!
                         
                     }
                     if localNode1 != nil {

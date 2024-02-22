@@ -64,7 +64,7 @@ struct Truss3DView: View {
                         truss3DStore.truss3DElements[truss3d.id].matID = localMatID!
                     }
                     if localPropID != nil {
-                        truss3DStore.truss3DElements[truss3d.propertiesID].matID = localPropID!
+                        truss3DStore.truss3DElements[truss3d.id].propertiesID = localPropID!
 
                     }
                     if localNode1 != nil {

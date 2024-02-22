@@ -52,9 +52,9 @@ struct Frame3DView: View {
                     Text("Node1:")
                     TextField("\(frame3d.node1)", value: $localNode1, format: .number)
 //                    Spacer()
-                    Toggle(isOn: $node1IsOn) {
+                    Toggle(isOn: $frame3DStore.frame3DElements[frame3d.id].pin1) {
                         Text("Pin End")
-                        if node1IsOn {
+                        if frame3DStore.frame3DElements[frame3d.id].pin1 {
                             Text("ON")
                         }
 //                        frame2DStore.frame2DElements[frame2d.id].pin1 = true
@@ -65,9 +65,9 @@ struct Frame3DView: View {
                     Text("Node2:")
                     TextField("\(frame3d.node2)", value: $localNode2, format: .number)
 //                    Spacer()
-                    Toggle(isOn: $node2IsOn) {
+                    Toggle(isOn: $frame3DStore.frame3DElements[frame3d.id].pin2) {
                         Text("Pin End")
-                        if node2IsOn {
+                        if frame3DStore.frame3DElements[frame3d.id].pin2 {
                             Text("ON")
                         }
 //                        frame2DStore.frame2DElements[frame2d.id].pin2 = true
@@ -88,7 +88,7 @@ struct Frame3DView: View {
                         frame3DStore.frame3DElements[frame3d.id].matID = localMatID!
                     }
                     if localPropID != nil {
-                        frame3DStore.frame3DElements[frame3d.propertiesID].matID = localPropID!
+                        frame3DStore.frame3DElements[frame3d.id].propertiesID = localPropID!
 
                     }
                     if localNode1 != nil {
