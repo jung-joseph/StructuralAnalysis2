@@ -214,6 +214,7 @@ class Truss2D: Elements, Identifiable {
         let dx = (nodesStore.nodes[node2].xcoord - nodesStore.nodes[node1].xcoord)
         let dy = (nodesStore.nodes[node2].ycoord - nodesStore.nodes[node1].ycoord)
         let dz = (nodesStore.nodes[node2].zcoord - nodesStore.nodes[node1].zcoord)
+        
         self.length = sqrt (dx * dx + dy * dy + dz * dz)
 //        print("node1 \(self.node1)")
 //        print("node2 \(self.node2)")
