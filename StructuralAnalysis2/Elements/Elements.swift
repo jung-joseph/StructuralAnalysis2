@@ -166,6 +166,25 @@ class Elements: Codable {
         }
         return product
     }
+    
+    func pinnedEnds(elStiff:  [[Double]], elimDof: Int) -> [[Double]]{
+        
+//        this function condenses a stiffness matrix to eliminate a DOF that is Zero, i.e., a pinned end
+        let numRows = elStiff.count
+        let numColumns = numRows
+//        var kPej: Double
+        var elStiffOut = elStiff
+        for i in 0...numRows - 1 {
+            for j in 0...numColumns - 1 {
+//                kPej  = 1.0/elStiff[elimDof][elimDof] * (-1.0 * elStiff[elimDof][j])
+//                elStiffOut[i][j] = (kPej * elStiff[i][elimDof]) + elStiff[i][j]
+                elStiffOut[i][j] = (1.0/elStiff[elimDof][elimDof] * (-1.0 * elStiff[elimDof][j]) * elStiff[i][elimDof]) + elStiff[i][j]
+
+
+            }
+        }
+        return elStiffOut
+    }
 }
 
 
@@ -565,8 +584,7 @@ class Frame2D: Elements, Identifiable {
         rTransposeK = multiply(rTranspose, elstiff)
         stiff = multiply(rTransposeK, rotationMatrix)
         
-//        print("stiff")
-//        print(stiff)
+
         
         return stiff
     }
@@ -1034,7 +1052,7 @@ class Frame2D: Elements, Identifiable {
         //               print("In Frame elStiffMatrix ")
         //               print("pin1 \(pin1) pin2 \(pin2)")
                 
-                if pin1 == false && pin2 == false {
+                if !pin1  && !pin2  {
 
                     elstiff[0][0] = youngsM * crossArea / len
                     elstiff[0][6] = -elstiff[0][0]
@@ -1095,15 +1113,71 @@ class Frame2D: Elements, Identifiable {
                     
                     
  
-                } else if pin1 == true {
+                } else if pin1 && !pin2 {
                     
                     fatalError("Not Implemented")
-                    
-                } else if pin2 {
+
+   /*
+//                 Node1
+//                    dof 0, u
+                    elstiff[0][0] = youngsM * crossArea / len
+                    elstiff[0][6] = -elstiff[0][0]
+//                    dof 1, v
+                    elstiff[1][1] = 3.0 * youngsM * izz / (len * len * len)
+                    elstiff[1][5] = 0.0
+                    elstiff[1][7] = -elstiff[1][1]
+                    elstiff[1][11] = 3.0 * youngsM * izz / (len * len)
+//                    dof 2, w
+                    elstiff[2][2] = 3.0 * youngsM * iyy / (len * len * len)
+                    elstiff[2][4] = 0.0
+                    elstiff[2][8] = -elstiff[2][2]
+                    elstiff[2][10] = elstiff[2][4]
+//                    dof 3, xx
+                    elstiff[3][3] = G * ixx / (len)
+                    elstiff[3][9] = -elstiff[3][3]
+//                    dof 4, yy
+                    elstiff[4][2] = 0.0
+                    elstiff[4][4] =  0.0
+                    elstiff[4][8] = 0.0
+                    elstiff[4][10] = 0.0
+//                    dof 5, zz
+                    elstiff[5][1] = 0.0
+                    elstiff[5][5] =  0.0
+                    elstiff[5][7] = 0.0
+                    elstiff[5][11] =  0.0
+//              Node 2
+//                    dof 6, u
+                    elstiff[6][0] = -elstiff[0][0]
+                    elstiff[6][6] = -elstiff[0][6]
+//                    dof 7, v
+                    elstiff[7][1] = -elstiff[1][1]
+                    elstiff[7][5] = 0.0
+                    elstiff[7][7] = -elstiff[1][7]
+                    elstiff[7][11] = -elstiff[1][11]
+//                    dof 8, w
+                    elstiff[8][2] = -elstiff[2][2]
+                    elstiff[8][4] = 0.0
+                    elstiff[8][8] = -elstiff[2][8]
+                    elstiff[8][10] = -elstiff[2][10]
+//                    dof 9, xx
+                    elstiff[9][3] = -elstiff[3][3]
+                    elstiff[9][9] = -elstiff[3][9]
+//                     dof 10, yy
+                    elstiff[10][2] = 3.0 * youngsM * iyy / (len * len)
+                    elstiff[10][4] =  0.0
+                    elstiff[10][8] = -elstiff[10][2]
+                    elstiff[10][10] = 3.0 * youngsM * iyy / (len)
+//                      dof 11, zz
+                    elstiff[11][1] = 3.0 * youngsM * izz / (len * len)
+                    elstiff[11][5] =  0.0
+                    elstiff[11][7] = -elstiff[11][1]
+                    elstiff[11][11] =  3.0 * youngsM * izz / (len)
+   */
+                } else if pin2 && !pin1{
 
                     fatalError("Not Implemented")
 
-                } else if pin1 == true && pin2 == true{
+                } else if  pin1 && pin2 {
                     
                    elstiff[0][0] =  1.0  * youngsM * crossArea / len
                    elstiff[0][6] = -1.0  * youngsM * crossArea / len

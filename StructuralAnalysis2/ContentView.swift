@@ -112,8 +112,6 @@ struct ContentView: View {
                             .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     })
                     
-
-                    
                     Button(action: {
                         showBCList.toggle()
                     }, label: {
