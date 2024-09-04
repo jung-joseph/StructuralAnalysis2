@@ -38,8 +38,9 @@ struct ContentView: View {
     @State var showModelView: Bool = false
     @State var showSaveModelView: Bool = false
     @State var showLoadModelView: Bool = false
+    @State var showVerificationProblemView: Bool = false
     
-    @State var showDisplacements: Bool = true
+    @State var showDisplacements: Bool = false
     
     enum CodingKeys: CodingKey {
         case nodesStore
@@ -200,6 +201,14 @@ struct ContentView: View {
                     .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
 
                     Button(action: {
+                        showVerificationProblemView.toggle()
+                    }, label: {
+                        Text("Load A Verification Problem")
+                            .font(.title)
+                    })
+                    
+                    
+                    Button(action: {
                         scene = ModelScene()
                         
                         scene.drawModel.viewModelAll(showDisplacements: false, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore, scene: scene)
@@ -281,6 +290,11 @@ struct ContentView: View {
         .sheet(isPresented: $showSaveModelView) {
             SaveModelView(nodesStore: nodesStore, dispStore: dispStore, materialStore: materialStore, elPropertyStore: elPropertyStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, loadStore: loadStore, bcStore: bcStore, showSaveModelView: $showSaveModelView)
         }
+        .sheet(isPresented: $showVerificationProblemView, content: {
+            VerificationProblemsView(scene: $scene, nodesStore: nodesStore, truss2DStore: truss2DStore, frame2DStore: frame2DStore, truss3DStore: truss3DStore, frame3DStore: frame3DStore, materialStore: materialStore, elPropertyStore: elPropertyStore, dispStore: dispStore, bcStore: bcStore, loadStore: loadStore)
+                .presentationDragIndicator(.visible)
+
+        })
         
 
     }

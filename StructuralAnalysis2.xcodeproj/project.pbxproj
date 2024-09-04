@@ -64,6 +64,9 @@
 		5303040B2B6AAE4B00FBF436 /* LoadList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530304062B6AAE4B00FBF436 /* LoadList.swift */; };
 		5303040C2B6AAE4B00FBF436 /* Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530304072B6AAE4B00FBF436 /* Load.swift */; };
 		5303040D2B6AAE4B00FBF436 /* LoadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 530304082B6AAE4B00FBF436 /* LoadView.swift */; };
+		537476692C85F5FD0037D656 /* VerificationProblemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537476682C85F5FD0037D656 /* VerificationProblemsView.swift */; };
+		5374766B2C85FDAC0037D656 /* VerificationProblems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5374766A2C85FDAC0037D656 /* VerificationProblems.swift */; };
+		5374766E2C8601BE0037D656 /* json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5374766D2C8601BE0037D656 /* json.swift */; };
 		53C537F32B7F940E00BEE095 /* FilePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 53C537F22B7F940E00BEE095 /* FilePicker */; };
 		53CCA9F32B7C16F300C5869C /* SaveModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CCA9F22B7C16F300C5869C /* SaveModelView.swift */; };
 /* End PBXBuildFile section */
@@ -127,6 +130,9 @@
 		530304062B6AAE4B00FBF436 /* LoadList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadList.swift; sourceTree = "<group>"; };
 		530304072B6AAE4B00FBF436 /* Load.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Load.swift; sourceTree = "<group>"; };
 		530304082B6AAE4B00FBF436 /* LoadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadView.swift; sourceTree = "<group>"; };
+		537476682C85F5FD0037D656 /* VerificationProblemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationProblemsView.swift; sourceTree = "<group>"; };
+		5374766A2C85FDAC0037D656 /* VerificationProblems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationProblems.swift; sourceTree = "<group>"; };
+		5374766D2C8601BE0037D656 /* json.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = json.swift; sourceTree = "<group>"; };
 		53CCA9F22B7C16F300C5869C /* SaveModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveModelView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,6 +172,7 @@
 				530303992B6AAA0900FBF436 /* Graphics */,
 				530303A02B6AAAAF00FBF436 /* SolutionProcedure */,
 				530303A32B6AAB1A00FBF436 /* Model */,
+				537476672C85F5BC0037D656 /* VerificationProblems */,
 				530303A62B6AAB5E00FBF436 /* Nodes */,
 				530303B12B6AABB000FBF436 /* Gauss */,
 				530303B42B6AABFC00FBF436 /* Elements */,
@@ -175,6 +182,7 @@
 				530303ED2B6AAD4800FBF436 /* Materials */,
 				530304032B6AAE2500FBF436 /* Loads */,
 				5303038D2B6AA95100FBF436 /* Assets.xcassets */,
+				5374766C2C8601570037D656 /* HelperFiles */,
 				5303038F2B6AA95100FBF436 /* Preview Content */,
 			);
 			path = StructuralAnalysis2;
@@ -319,6 +327,23 @@
 			path = Loads;
 			sourceTree = "<group>";
 		};
+		537476672C85F5BC0037D656 /* VerificationProblems */ = {
+			isa = PBXGroup;
+			children = (
+				537476682C85F5FD0037D656 /* VerificationProblemsView.swift */,
+				5374766A2C85FDAC0037D656 /* VerificationProblems.swift */,
+			);
+			path = VerificationProblems;
+			sourceTree = "<group>";
+		};
+		5374766C2C8601570037D656 /* HelperFiles */ = {
+			isa = PBXGroup;
+			children = (
+				5374766D2C8601BE0037D656 /* json.swift */,
+			);
+			path = HelperFiles;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -408,6 +433,7 @@
 				530303982B6AA9E200FBF436 /* ContentView.swift in Sources */,
 				530303F62B6AADA600FBF436 /* Material.swift in Sources */,
 				530303D52B6AAC3800FBF436 /* Frame2DView.swift in Sources */,
+				5374766E2C8601BE0037D656 /* json.swift in Sources */,
 				530303E32B6AACFD00FBF436 /* ElPropertyRow.swift in Sources */,
 				530303B02B6AAB9C00FBF436 /* Node.swift in Sources */,
 				530303B32B6AABDF00FBF436 /* Gauss.swift in Sources */,
@@ -423,6 +449,7 @@
 				530303AE2B6AAB9C00FBF436 /* NodeList.swift in Sources */,
 				530303F72B6AADA600FBF436 /* MaterialStore.swift in Sources */,
 				530303CC2B6AAC3800FBF436 /* Elements.swift in Sources */,
+				537476692C85F5FD0037D656 /* VerificationProblemsView.swift in Sources */,
 				5303040B2B6AAE4B00FBF436 /* LoadList.swift in Sources */,
 				530303C72B6AAC3800FBF436 /* Frame2DList.swift in Sources */,
 				530303D62B6AAC3800FBF436 /* Frame3DView.swift in Sources */,
@@ -436,6 +463,7 @@
 				530303D02B6AAC3800FBF436 /* Frame2DStore.swift in Sources */,
 				530303EC2B6AAD3E00FBF436 /* DispStore.swift in Sources */,
 				530303F42B6AADA600FBF436 /* MaterialView.swift in Sources */,
+				5374766B2C85FDAC0037D656 /* VerificationProblems.swift in Sources */,
 				53CCA9F32B7C16F300C5869C /* SaveModelView.swift in Sources */,
 				530303F52B6AADA600FBF436 /* MaterialsList.swift in Sources */,
 				530303CF2B6AAC3800FBF436 /* Frame3DStore.swift in Sources */,
