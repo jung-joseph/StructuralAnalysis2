@@ -86,6 +86,10 @@ struct Model: Encodable, Decodable {
         if let tempTruss2DStore = try? container.decode(Truss2DStore.self,  forKey: .truss2DStore){
             print("truss2DStore decoded")
             self.truss2DStore = tempTruss2DStore
+            print("Number of truss2D Elements: \(truss2DStore.truss2DElements.count)")
+//            for i in 0...truss2DStore.truss2DElements.count-1{
+//                print("\(i)  \(truss2DStore.truss2DElements[i].node1) \(truss2DStore.truss2DElements[i].node2)")
+//            }
             print("truss2DStore: \(truss2DStore.truss2DElements)")
         } else {
             fatalError("Unable to Decode truss2Dstore")
